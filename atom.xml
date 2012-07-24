@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Chao's Tech Notes]]></title>
+  <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2012-07-25T03:42:59+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello Octopress]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/hello-octopress/"/>
+    <updated>2012-07-25T02:31:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/hello-octopress</id>
+    <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
+so cool!</p>
+
+<h2>TO DO:</h2>
+
+<ul>
+<li>Add a &#8216;about&#8217; page serving as the self introduction</li>
+<li>Enable visitors to post comments</li>
+<li>Add useful plugins</li>
+<li>Prepare the post to summarise the process of setting all this things up</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
