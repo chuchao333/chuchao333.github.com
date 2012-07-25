@@ -3,7 +3,7 @@ layout: post
 title: "Hello Octopress"
 date: 2012-07-25 02:31
 comments: true
-categories: 
+categories: Octopress 
 ---
 
 This is the first post, using Octopress to set up a tech blog on github is
