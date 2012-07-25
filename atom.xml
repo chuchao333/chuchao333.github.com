@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Chao's Tech Notes]]></title>
+  <title><![CDATA[Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-07-25T03:48:29+08:00</updated>
+  <updated>2012-07-26T02:28:46+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress and Github]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/"/>
+    <updated>2012-07-25T23:21:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
+    <content type="html"><![CDATA[<p>Testing rst</p>
+<figure class="code"><figcaption><span>Read Hacker News on a budget</span> <a href="http://news.ycombinator.com">Hacker News</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="console"><span class="line"><span class="gp">$</span> curl http://news.ycombinator.com | less
+</span></code></pre></td></tr></table></div></figure><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+</span><span class="line">    <span class="sd">&quot;&quot;&quot;Testing octopress&quot;&quot;&quot;</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">print</span> <span class="s">&quot;this is so cool&quot;</span>
+</span></code></pre></td></tr></table></div></figure>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello Octopress]]></title>
