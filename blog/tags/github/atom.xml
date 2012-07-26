@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: github | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/github/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2012-07-27T01:25:41+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress and Github]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/"/>
+    <updated>2012-07-25T23:21:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
+    <content type="html"><![CDATA[<p>Testing rst</p>
+
+<p>.. code-block:: console
+   :caption: Read Hacker News on a budget
+   :url: http://news.ycombinator.com
+   :title: Hacker News</p>
+
+<p>   $ curl http://news.ycombinator.com | less</p>
+
+<p>.. code-block:: python</p>
+
+<p>   def test():</p>
+
+<pre><code>   """Testing octopress"""
+
+   print "this is so cool"
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: octopress | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/octopress/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
   <updated>2012-07-27T01:25:41+08:00</updated>
   <id>http://chuchao333.github.com/</id>
@@ -19,17 +19,23 @@
     <updated>2012-07-25T23:21:00+08:00</updated>
     <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
     <content type="html"><![CDATA[<p>Testing rst</p>
-<figure class="code"><figcaption><span>Read Hacker News on a budget</span> <a href="http://news.ycombinator.com">Hacker News</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="console"><span class="line"><span class="gp">$</span> curl http://news.ycombinator.com | less
-</span></code></pre></td></tr></table></div></figure><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
-</span><span class="line">    <span class="sd">&quot;&quot;&quot;Testing octopress&quot;&quot;&quot;</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">print</span> <span class="s">&quot;this is so cool&quot;</span>
-</span></code></pre></td></tr></table></div></figure>]]></content>
+
+<p>.. code-block:: console
+   :caption: Read Hacker News on a budget
+   :url: http://news.ycombinator.com
+   :title: Hacker News</p>
+
+<p>   $ curl http://news.ycombinator.com | less</p>
+
+<p>.. code-block:: python</p>
+
+<p>   def test():</p>
+
+<pre><code>   """Testing octopress"""
+
+   print "this is so cool"
+</code></pre>
+]]></content>
   </entry>
   
   <entry>
@@ -43,7 +49,7 @@ so cool!</p>
 <h2>TO DO:</h2>
 
 <ul>
-<li>Add a &#8216;about&#8217; page serving as the self introduction</li>
+<li>Add a 'about' page serving as the self introduction</li>
 <li>Enable visitors to post comments</li>
 <li>Add useful plugins</li>
 <li>Prepare the post to summarise the process of setting all this things up</li>
