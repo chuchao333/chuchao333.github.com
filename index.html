@@ -59,6 +59,7 @@ is quite popular recently and you can just find a huge number of &hellip;">
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
 </ul>
 
 </nav>
@@ -100,43 +101,12 @@ is quite popular recently and you can just find a huge number of bloggers who
 have written about how to set this up online. My main references are
 <a class="reference external" href="http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/">Setting up a blog on Octopress and github</a>
 and <a class="reference external" href="http://mrzhang.me/blog/blog-equals-github-plus-octopress.html">Blog = Github + Octopress</a> (In Chinese).</p>
-<div class="section" id="ruby-setup">
-<h2>Ruby setup</h2>
-<p>Since I am new to ruby, I just follow others&#8217; instructions to install ruby by rvm.
-My first attempt was:</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="console"><span class="line"><span class="gp">$</span> sudo apt-get install ruby-rvm
-</span></code></pre></td></tr></table></div></figure><p>This turned out to cause some troubles in the following steps to install ruby 1.9.2.
-I don&#8217;t know the exact reason because I am not familiar with ruby. This <a class="reference external" href="http://octopress.org/docs/setup/rvm/">link</a>
-contains detailed information to install rvm. Once it&#8217;s installed, installing octopress
-following <a class="reference external" href="http://octopress.org/docs/setup/">the offical guide</a> should be straightforward.</p>
 </div>
-<div class="section" id="host-on-github">
-<h2>Host on Github</h2>
-<p>This is very simple in Octopress.
-I mainly followed <a class="reference external" href="http://code.dblock.org/octopress-setting-up-a-blog-and-contributing-to-an-existing-one">this</a>, one
-thing worth mentioning here is during the step to enter the url of your repository after typing</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="console"><span class="line"><span class="gp">$</span> rake setup_github_pages
-</span></code></pre></td></tr></table></div></figure><p>Here, the repo must use the username/username.github.com naming scheme,
-see <a class="reference external" href="https://help.github.com/articles/user-organization-and-project-pages">here</a></p>
-</div>
-<div class="section" id="writing-posts-with-restructuredtext">
-<h2>Writing posts with reStructuredText</h2>
-<p>As you may already know, I am a python fan. So I prefer rst to markdown.
-<a class="reference external" href="https://github.com/xdissent/jekyll-rst">jekyll-rst</a>
-is the plugin to add rst support to Octopress. After enabling the plugin, I changed
-default post ext in _confg.yml to rst. Code block in rst is quite handy to type.</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
-</span><span class="line">    <span class="sd">&quot;&quot;&quot;Testing octopress&quot;&quot;&quot;</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">print</span> <span class="s">&quot;this is so cool&quot;</span>
-</span></code></pre></td></tr></table></div></figure></div></div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/25/octopress-and-github/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -174,6 +144,8 @@ default post ext in _confg.yml to rst. Code block in rst is quite handy to type.
 so cool!</p>
 
 <h2>TO DO:</h2>
+
+<hr />
 
 <ul>
 <li>Add a &#8216;about&#8217; page serving as the self introduction</li>

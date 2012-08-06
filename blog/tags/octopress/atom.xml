@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: octopress | Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/blog/tags/octopress/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-07-27T09:30:58+08:00</updated>
+  <updated>2012-08-07T00:49:19+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -23,6 +23,8 @@ is quite popular recently and you can just find a huge number of bloggers who
 have written about how to set this up online. My main references are
 <code>Setting up a blog on Octopress and github &lt;http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/&gt;</code><em>
 and <code>Blog = Github + Octopress &lt;http://mrzhang.me/blog/blog-equals-github-plus-octopress.html&gt;</code></em> (In Chinese).</p>
+
+<p>.. more</p>
 
 <h2>Ruby setup</h2>
 
@@ -78,6 +80,8 @@ default post ext in </em>confg.yml to rst. Code block in rst is quite handy to t
 so cool!</p>
 
 <h2>TO DO:</h2>
+
+<hr />
 
 <ul>
 <li>Add a 'about' page serving as the self introduction</li>
