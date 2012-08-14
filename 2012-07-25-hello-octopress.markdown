@@ -12,6 +12,7 @@ so cool!
 
 TO DO:
 -----
+-----
 
 - Add a 'about' page serving as the self introduction
 - Enable visitors to post comments

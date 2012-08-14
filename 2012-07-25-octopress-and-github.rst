@@ -13,6 +13,8 @@ have written about how to set this up online. My main references are
 `Setting up a blog on Octopress and github <http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/>`_
 and `Blog = Github + Octopress <http://mrzhang.me/blog/blog-equals-github-plus-octopress.html>`_ (In Chinese).
 
+.. more
+
 Ruby setup
 ----------
 
