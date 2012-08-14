@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Octopress - Chao's Random Thoughts</title>
+  <title>Introduction on reading source of python standard libraries series - Chao's Random Thoughts</title>
   <meta name="author" content="Chao Chu">
 
   
-  <meta name="description" content="Category: Octopress">
+  <meta name="description" content="I am going to start the series of posts on reading the source of python standard
+modules. I will go with the pure python modules first, and maybe &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://chuchao333.github.comblog/categories/octopress/">
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/">
   <link href="/favicon.ico" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,50 +66,117 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Octopress</h1>
+    
+      <h1 class="entry-title">Introduction on Reading Source of Python Standard Libraries Series</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T21:11:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
+
+
+<div class="entry-content"><p>I am going to start the series of posts on reading the source of python standard
+modules. I will go with the pure python modules first, and maybe later I can
+continue with C implementations of the modules. Let's see how far I could go.</p>
+<div class="section" id="what-will-be-included">
+<h2>What will be included</h2>
+<ul class="simple">
+<li>A brief introduction of the module. (It should be very short, people can go to
+the standard library doc for more information.)</li>
+<li>Special highlights about the important APIs, implementation details.</li>
+<li>Python features/idioms/tricks/gotchas that worth the whistle, especially those
+I was not familiar with</li>
+<li>Detail explanations about the tricky part of the code if any</li>
+</ul>
+</div>
+<div class="section" id="what-will-not-be-included">
+<h2>What will not be included</h2>
+<ul class="simple">
+<li>The example usage of the various APIs, for this kind of stuff,
+<a class="reference external" href="http://www.doughellmann.com/PyMOTW/">Python module of the week</a> is a better
+place to go</li>
+</ul>
+<p>Also, alone the way, I may start another series on some specific 'advanced topics'
+in python, like <strong>descriptor</strong>, <strong>decorator</strong>, <strong>method resolution order(mro)</strong>
+and so on. Mainly about why they are introduced into python, how they are used and
+the typical use cases. This is inspired by the blogs about
+<a class="reference external" href="http://python-history.blogspot.com/">python history</a></p>
+<p>This post will also be used to track my progress.</p>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <div id="blog-archives" class="category">
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
 
 
 
   
-  <h2>2012</h2>
 
-<article>
+
+<time datetime="2012-08-14T21:11:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
   
-<h1><a href="/blog/2012/07/25/octopress-and-github/">Octopress and Github</a></h1>
-<time datetime="2012-07-25T23:21:00+08:00" pubdate><span class='month'>Jul</span> <span class='day'>25</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>Octopress</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
+    <a class='category' href='/blog/categories/python/'>Python</a>
   
-<h1><a href="/blog/2012/07/25/hello-octopress/">Hello Octopress</a></h1>
-<time datetime="2012-07-25T02:31:00+08:00" pubdate><span class='month'>Jul</span> <span class='day'>25</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>Octopress</a></span>
-</footer>
+</span>
 
 
-</article>
-
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
 </div>
 
-  
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/25/octopress-and-github/" title="Previous Post: Octopress and Github">&laquo; Octopress and Github</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/14/python-heapq/" title="Next Post: Python heapq">Python heapq &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -191,7 +259,10 @@
       var disqus_shortname = 'chaoc';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2012-08-15T00:20:49+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python heapq]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/"/>
+    <updated>2012-08-14T22:26:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/14/python-heapq</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>The module provides an implementation of heap queue algorithm, also known as
+priority queue algorithm.</p>
+
+<h2>Highlights</h2>
+
+<ul>
+<li>Zero-based indexing is used, so the children's index of node with index k
+are (2<em>k + 1) and (2</em>k + 2) respectively.</li>
+<li>Internally a 'min heap' is maintained rather than 'max heap', which is more
+generally used in algorithm textbooks.</li>
+<li>Three general functions based on heaps are also provided:</li>
+</ul>
+
+
+<p>.. code-block:: python</p>
+
+<pre><code># Merge multiple sorted inputs into a single sorted output
+# (for example, merge timestamped entries from multiple log files)
+heapq.merge(*iterables)
+
+# The following two functions are effectively like
+# sorted(iterable, key=key, reverse=True)[:n] and
+# sorted(iterable, key=key)[:n],
+# but they perform best with smaller values of n
+heapq.nlargest(n, iterable[, key])
+heapq.nsmallest(n, iterable[, key]))
+</code></pre>
+
+<h2>Pythonic stuff</h2>
+
+<p>Rich comparison methods
+~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def cmp_lt(x, y):
+    # use __lt__ if available; otherwise, try __le__
+    return x &lt; y if hasattr(x, '__lt__') else (not y &lt;= x)
+</code></pre>
+
+<p>In python, there are 6 so called "Rich Comparison" methods, x &lt; y calls
+x.<strong>lt</strong>(y) and others are similar (<strong>le</strong> and &lt;=; <strong>gt</strong> and >=; <strong>eq</strong> and ==;
+<strong>ne</strong> and &lt;>). Arguments to rich comparison  methods are never coerced. see
+<code>coercion &lt;http://docs.python.org/glossary.html#term-coercion&gt;</code>_</p>
+
+<h2>Code comments</h2>
+
+<p>Why heapify(x) is O(n)?
+~~~~~~~~~~~~~~~~~~~~~~~
+This is not obvious at first by seeing the code, given that there is a 'while'
+loop in <em>siftup and also a while loop in </em>siftdown(called in _siftup). Let's
+look into it further:</p>
+
+<p>1) in the while loop of <em>siftup, it takes O(L) time for nodes that L levels
+   above leaves.
+2) and in the while loop of </em>siftdown called in <em>siftup, it takes at most L
+   steps, so </em>siftdown is O(L).
+3) since we have n/4 nodes in level 1, n/8 nodes in level 2, and finally one
+   root node, which is lg(n) levels above leaf, so the total amount in the while
+   loop of heapify is:</p>
+
+<p>| <strong>n/4 * c + n/8 * c + n/16 * 3c + ... + 1 * lg(n) * c</strong>, and let n/4 = 2<sup>k,</sup>
+  after simplification, we get:
+| <strong>c * 2<sup>k(1/2<sup>0</sup></sup> + 2/2<sup>1</sup> + 3/2<sup>2</sup> + ... + (k+1)/2<sup>k)**,</sup> as the limit of
+  </strong>(k+1)/2<sup>k**</sup> is 0 when k is infinite, so the term in the brackets bound to
+  a constant, from this we can conclude that heapify is O(2<sup>k),</sup> which is O(n).
+|</p>
+
+<p>Why it continues to find the smaller child until a leaf is hit in _siftup?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As explained in the comment by the module author, this is a ad hoc to reduce
+the comparisons on the following operations on the heap.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction on reading source of python standard libraries series]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
+    <updated>2012-08-14T21:11:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
+    <content type="html"><![CDATA[<p>I am going to start the series of posts on reading the source of python standard
+modules. I will go with the pure python modules first, and maybe later I can
+continue with C implementations of the modules. Let's see how far I could go.</p>
+
+<h2>What will be included</h2>
+
+<ul>
+<li>A brief introduction of the module. (It should be very short, people can go to
+the standard library doc for more information.)</li>
+<li>Special highlights about the important APIs, implementation details.</li>
+<li>Python features/idioms/tricks/gotchas that worth the whistle, especially those
+I was not familiar with</li>
+<li>Detail explanations about the tricky part of the code if any</li>
+</ul>
+
+
+<h2>What will not be included</h2>
+
+<ul>
+<li>The example usage of the various APIs, for this kind of stuff,
+<code>Python module of the week &lt;http://www.doughellmann.com/PyMOTW/&gt;</code>_ is a better
+place to go</li>
+</ul>
+
+
+<p>Also, alone the way, I may start another series on some specific 'advanced topics'
+in python, like <strong>descriptor</strong>, <strong>decorator</strong>, <strong>method resolution order(mro)</strong>
+and so on. Mainly about why they are introduced into python, how they are used and
+the typical use cases. This is inspired by the blogs about
+<code>python history &lt;http://python-history.blogspot.com/&gt;</code>_</p>
+
+<p>This post will also be used to track my progress.</p>
+]]></content>
+  </entry>
+  
+</feed>
