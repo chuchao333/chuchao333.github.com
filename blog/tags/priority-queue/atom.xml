@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Python | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/categories/python/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: priority queue | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/priority-queue/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
   <updated>2012-08-15T22:24:46+08:00</updated>
   <id>http://chuchao333.github.com/</id>
@@ -92,46 +92,6 @@ look into it further:</p>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 As explained in the comment by the module author, this is a ad hoc to reduce
 the comparisons on the following operations on the heap.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction on reading source of python standard libraries series]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
-    <updated>2012-08-14T21:11:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
-    <content type="html"><![CDATA[<p>I am going to start the series of posts on reading the source of python standard
-modules. I will go with the pure python modules first, and maybe later I can
-continue with C implementations of the modules. Let's see how far I could go.</p>
-
-<h2>What will be included</h2>
-
-<ul>
-<li>A brief introduction of the module. (It should be very short, people can go to
-the standard library doc for more information.)</li>
-<li>Special highlights about the important APIs, implementation details.</li>
-<li>Python features/idioms/tricks/gotchas that worth the whistle, especially those
-I was not familiar with</li>
-<li>Detail explanations about the tricky part of the code if any</li>
-</ul>
-
-
-<h2>What will not be included</h2>
-
-<ul>
-<li>The example usage of the various APIs, for this kind of stuff,
-<code>Python module of the week &lt;http://www.doughellmann.com/PyMOTW/&gt;</code>_ is a better
-place to go</li>
-</ul>
-
-
-<p>Also, alone the way, I may start another series on some specific 'advanced topics'
-in python, like <strong>descriptor</strong>, <strong>decorator</strong>, <strong>method resolution order(mro)</strong>
-and so on. Mainly about why they are introduced into python, how they are used and
-the typical use cases. This is inspired by the blogs about
-<code>python history &lt;http://python-history.blogspot.com/&gt;</code>_</p>
-
-<p>This post will also be used to track my progress.</p>
 ]]></content>
   </entry>
   
