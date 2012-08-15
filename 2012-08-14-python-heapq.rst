@@ -4,7 +4,9 @@ title: "Python heapq"
 date: 2012-08-14 22:26
 comments: true
 categories: Python
-tags: python, heap
+tags: [python, heap, priority queue]
+keywords: python, heapq, priority queue
+description: Notes on reading the source of heapq
 ---
 
 Introduction
