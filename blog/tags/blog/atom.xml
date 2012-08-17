@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: blog | Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/blog/tags/blog/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-08-15T22:24:46+08:00</updated>
+  <updated>2012-08-18T02:33:11+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -21,29 +21,26 @@
     <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
 so cool!</p>
 
-<h2>TO DO:</h2>
-
+<h2 id="to-do">TO DO:</h2>
 <hr />
 
 <ul>
-<li>Add a 'about' page serving as the self introduction</li>
-<li>Enable visitors to post comments</li>
-<li>Add useful plugins</li>
-<li>Prepare the post to summarise the process of setting all this things up</li>
+  <li>Add a ‘about’ page serving as the self introduction</li>
+  <li>Enable visitors to post comments</li>
+  <li>Add useful plugins</li>
+  <li>Prepare the post to summarise the process of setting all this things up</li>
 </ul>
 
-
-<h2>Update on 2012-07-27:</h2>
-
+<h2 id="update-on-2012-07-27">Update on 2012-07-27:</h2>
 <hr />
 
 <p>So far, I have finished the basic settings of this blog. The changes include:</p>
 
 <ul>
-<li>Change the default layout and fonts to my preference</li>
-<li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
-<li>Enable comment</li>
-<li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
+  <li>Change the default layout and fonts to my preference</li>
+  <li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
+  <li>Enable comment</li>
+  <li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
 </ul>
 
 ]]></content>

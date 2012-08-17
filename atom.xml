@@ -4,7 +4,7 @@
   <title><![CDATA[Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-08-15T22:24:46+08:00</updated>
+  <updated>2012-08-18T02:33:11+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -12,6 +12,206 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/"/>
+    <updated>2012-08-18T00:57:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress</id>
+    <content type="html"><![CDATA[<p>It took me some time to finally get latex math formulas working in Octopress.
+If you googled ‘Octopress latex’, you can get quite a few online resources about
+how to support latex in octopress, with various levels of complexity. In this
+post, I will write down how I achieve this.</p>
+
+<h2 id="the-initial-attempt">The initial attempt</h2>
+<p>As I installed the <a href="https://github.com/xdissent/jekyll-rst">jekyll-rst</a> plugin
+to use rst to write my posts, I thought it should be easy to write latex math
+because docutils has native support for it since version 0.8 (A :math: role and
+also a .. math: directive introduced for that). However, after I tried to use
+these in a octopress post, I found that the post will be rendered to empty. For
+example, if I insert the following rst code into my post, the whole post becomes
+empty; but after removing this line, everything is fine.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">The area of a circle is :math:`A_\text{c} = (\pi/4) d^2`.</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>I also verified that the exact same code can be successfully converted to valid
+html using the ‘rst2html.py’ script on my system, so I guess maybe something is
+wrong in ‘RbST’. I found that in RbST, it has its own copies of rst2html and
+rst2latex tools under ** /gems/RbST-0.1.3/lib/rst2parts **,</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="console"><span class="line"><span class="gp">chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$</span> ls
+</span><span class="line"><span class="go">__init__.py  rst2html.py  rst2latex.py  transform.py  transform.pyc</span>
+</span><span class="line"><span class="gp">chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$</span> ls ..
+</span><span class="line"><span class="go">rbst.rb  rst2parts</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>which will be used in rbst.rb. I have even tried to change rbst.rb to use the
+rst2html.py installed on my system, but this also didn’t get any luck.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class="ruby"><span class="line"><span class="k">class</span> <span class="nc">RbST</span>
+</span><span class="line">
+</span><span class="line">  <span class="vc">@@executable_path</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="s2">&quot;rst2parts&quot;</span><span class="p">))</span>
+</span><span class="line">  <span class="vc">@@executables</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="line">    <span class="c1"># :html  =&gt; File.join(@@executable_path, &quot;rst2html.py&quot;),</span>
+</span><span class="line">    <span class="ss">:html</span>  <span class="o">=&gt;</span> <span class="s2">&quot;/usr/local/bin/rst2html.py&quot;</span><span class="p">,</span>
+</span><span class="line">    <span class="ss">:latex</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vc">@@executable_path</span><span class="p">,</span> <span class="s2">&quot;rst2latex.py&quot;</span><span class="p">)</span>
+</span><span class="line">  <span class="p">}</span>
+</span><span class="line"><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Finally, I gave up on this and opened an
+<a href="https://github.com/xdissent/jekyll-rst/issues/6">issue</a> on this for the jekyll-rst
+plugin. Hope the author can fix this.</p>
+
+<h2 id="switch-back-to-markdown-and-using-kramdown">Switch back to markdown and using kramdown</h2>
+<p>After a google search about this issue, seems that the simplest solution is to use
+kramdown, which has built-in support for latex.</p>
+
+<p>First, install kramdown:
+<code>gem install karmdown</code></p>
+
+<p>Then, add mathjax configs into &lt;head&gt;&lt;/head&gt; tag, in octopress, just add the
+below code into <code>/source/_includes/custom/head.html</code>:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+</pre></td><td class="code"><pre><code class="html"><span class="line"><span class="c">&lt;!-- mathjax config similar to math.stackexchange --&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+</span><span class="line">  <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+</span><span class="line">    <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
+</span><span class="line">      <span class="nx">inlineMath</span><span class="o">:</span> <span class="p">[</span> <span class="p">[</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;$&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;\\(&quot;</span><span class="p">,</span><span class="s2">&quot;\\)&quot;</span><span class="p">]</span> <span class="p">],</span>
+</span><span class="line">      <span class="nx">processEscapes</span><span class="o">:</span> <span class="kc">true</span>
+</span><span class="line">    <span class="p">}</span>
+</span><span class="line">  <span class="p">});</span>
+</span><span class="line"><span class="nt">&lt;/script&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+</span><span class="line">    <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+</span><span class="line">      <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
+</span><span class="line">        <span class="nx">skipTags</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;script&#39;</span><span class="p">,</span> <span class="s1">&#39;noscript&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;textarea&#39;</span><span class="p">,</span> <span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">]</span>
+</span><span class="line">      <span class="p">}</span>
+</span><span class="line">    <span class="p">});</span>
+</span><span class="line"><span class="nt">&lt;/script&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+</span><span class="line">    <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="line">        <span class="kd">var</span> <span class="nx">all</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">getAllJax</span><span class="p">(),</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class="line">        <span class="k">for</span><span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">all</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">            <span class="nx">all</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">SourceElement</span><span class="p">().</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">className</span> <span class="o">+=</span> <span class="s1">&#39; has-jax&#39;</span><span class="p">;</span>
+</span><span class="line">        <span class="p">}</span>
+</span><span class="line">    <span class="p">});</span>
+</span><span class="line"><span class="nt">&lt;/script&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+</span><span class="line">   <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;</span>
+</span><span class="line"><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>See <a href="http://kramdown.rubyforge.org/syntax.html#math-blocks">here</a> for more details.
+After this, we are ready to test latex math in our post. For example:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="latex"><span class="line"><span class="sb">$$</span><span class="nb"></span>
+</span><span class="line"><span class="nv">\begin</span><span class="nb">{align</span><span class="o">*</span><span class="nb">}</span>
+</span><span class="line"><span class="nb">  &amp; </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">x,y</span><span class="o">)</span><span class="nb"> </span><span class="o">=</span><span class="nb"> </span><span class="nv">\phi</span><span class="nb"> </span><span class="nv">\left</span><span class="o">(</span><span class="nv">\sum</span><span class="nb">_{i</span><span class="o">=</span><span class="m">1</span><span class="nb">}^n x_ie_i, </span><span class="nv">\sum</span><span class="nb">_{j</span><span class="o">=</span><span class="m">1</span><span class="nb">}^n y_je_j </span><span class="nv">\right</span><span class="o">)</span><span class="nb"></span>
+</span><span class="line"><span class="nb">  </span><span class="o">=</span><span class="nb"> </span><span class="nv">\sum</span><span class="nb">_{i</span><span class="o">=</span><span class="m">1</span><span class="nb">}^n </span><span class="nv">\sum</span><span class="nb">_{j</span><span class="o">=</span><span class="m">1</span><span class="nb">}^n x_i y_j </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">e_i, e_j</span><span class="o">)</span><span class="nb"> </span><span class="o">=</span><span class="nb"> </span><span class="nv">\\</span><span class="nb"></span>
+</span><span class="line"><span class="nb">  &amp; </span><span class="o">(</span><span class="nb">x_</span><span class="m">1</span><span class="nb">, </span><span class="nv">\ldots</span><span class="nb">, x_n</span><span class="o">)</span><span class="nb"> </span><span class="nv">\left</span><span class="o">(</span><span class="nb"> </span><span class="nv">\begin</span><span class="nb">{array}{ccc}</span>
+</span><span class="line"><span class="nb">      </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">e_</span><span class="m">1</span><span class="nb">, e_</span><span class="m">1</span><span class="o">)</span><span class="nb"> &amp; </span><span class="nv">\cdots</span><span class="nb"> &amp; </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">e_</span><span class="m">1</span><span class="nb">, e_n</span><span class="o">)</span><span class="nb"> </span><span class="nv">\\</span><span class="nb"></span>
+</span><span class="line"><span class="nb">      </span><span class="nv">\vdots</span><span class="nb"> &amp; </span><span class="nv">\ddots</span><span class="nb"> &amp; </span><span class="nv">\vdots</span><span class="nb"> </span><span class="nv">\\</span><span class="nb"></span>
+</span><span class="line"><span class="nb">      </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">e_n, e_</span><span class="m">1</span><span class="o">)</span><span class="nb"> &amp; </span><span class="nv">\cdots</span><span class="nb"> &amp; </span><span class="nv">\phi</span><span class="o">(</span><span class="nb">e_n, e_n</span><span class="o">)</span><span class="nb"></span>
+</span><span class="line"><span class="nb">    </span><span class="nv">\end</span><span class="nb">{array} </span><span class="nv">\right</span><span class="o">)</span><span class="nb"></span>
+</span><span class="line"><span class="nb">  </span><span class="nv">\left</span><span class="o">(</span><span class="nb"> </span><span class="nv">\begin</span><span class="nb">{array}{c}</span>
+</span><span class="line"><span class="nb">      y_</span><span class="m">1</span><span class="nb"> </span><span class="nv">\\</span><span class="nb"></span>
+</span><span class="line"><span class="nb">      </span><span class="nv">\vdots</span><span class="nb"> </span><span class="nv">\\</span><span class="nb"></span>
+</span><span class="line"><span class="nb">      y_n</span>
+</span><span class="line"><span class="nb">    </span><span class="nv">\end</span><span class="nb">{array} </span><span class="nv">\right</span><span class="o">)</span><span class="nb"></span>
+</span><span class="line"><span class="nv">\end</span><span class="nb">{align</span><span class="o">*</span><span class="nb">}</span>
+</span><span class="line"><span class="s">$$</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>will render as</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align*}
+  & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
+  = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
+  & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) & \cdots & \phi(e_1, e_n) \\
+      \vdots & \ddots & \vdots \\
+      \phi(e_n, e_1) & \cdots & \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \\
+      \vdots \\
+      y_n
+    \end{array} \right)
+\end{align*}
+ %]]&gt;</script>
+
+<p>And for inline latex code, just use <code>$\exp(-\frac{x^2}{2})$</code>, which will give
+$\exp(-\frac{x^2}{2})$.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Python heapq]]></title>
@@ -194,29 +394,26 @@ default post ext in _confg.yml to rst. Code block in rst is quite handy to type.
     <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
 so cool!</p>
 
-<h2>TO DO:</h2>
-
+<h2 id="to-do">TO DO:</h2>
 <hr />
 
 <ul>
-<li>Add a &#8216;about&#8217; page serving as the self introduction</li>
-<li>Enable visitors to post comments</li>
-<li>Add useful plugins</li>
-<li>Prepare the post to summarise the process of setting all this things up</li>
+  <li>Add a ‘about’ page serving as the self introduction</li>
+  <li>Enable visitors to post comments</li>
+  <li>Add useful plugins</li>
+  <li>Prepare the post to summarise the process of setting all this things up</li>
 </ul>
 
-
-<h2>Update on 2012-07-27:</h2>
-
+<h2 id="update-on-2012-07-27">Update on 2012-07-27:</h2>
 <hr />
 
 <p>So far, I have finished the basic settings of this blog. The changes include:</p>
 
 <ul>
-<li>Change the default layout and fonts to my preference</li>
-<li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
-<li>Enable comment</li>
-<li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
+  <li>Change the default layout and fonts to my preference</li>
+  <li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
+  <li>Enable comment</li>
+  <li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
 </ul>
 
 ]]></content>

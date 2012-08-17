@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: heap | Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/blog/tags/heap/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-08-15T22:24:46+08:00</updated>
+  <updated>2012-08-18T02:33:11+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -18,21 +18,18 @@
     <link href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/"/>
     <updated>2012-08-14T22:26:00+08:00</updated>
     <id>http://chuchao333.github.com/blog/2012/08/14/python-heapq</id>
-    <content type="html"><![CDATA[<h2>Introduction</h2>
-
+    <content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>The module provides an implementation of heap queue algorithm, also known as
 priority queue algorithm.</p>
 
-<h2>Highlights</h2>
-
+<h2 id="highlights">Highlights</h2>
 <ul>
-<li>Zero-based indexing is used, so the children's index of node with index k
+  <li>Zero-based indexing is used, so the children’s index of node with index k
 are (2<em>k + 1) and (2</em>k + 2) respectively.</li>
-<li>Internally a 'min heap' is maintained rather than 'max heap', which is more
+  <li>Internally a ‘min heap’ is maintained rather than ‘max heap’, which is more
 generally used in algorithm textbooks.</li>
-<li>Three general functions based on heaps are also provided:</li>
+  <li>Three general functions based on heaps are also provided:</li>
 </ul>
-
 
 <p>.. code-block:: python</p>
 
@@ -48,7 +45,7 @@ heapq.nlargest(n, iterable[, key])
 heapq.nsmallest(n, iterable[, key]))
 </code></pre>
 
-<h2>Pythonic stuff</h2>
+<h2 id="pythonic-stuff">Pythonic stuff</h2>
 
 <p>Rich comparison methods
 ~~~~~~~~~~~~~~~~~~~~~~~</p>
@@ -60,32 +57,31 @@ heapq.nsmallest(n, iterable[, key]))
     return x &lt; y if hasattr(x, '__lt__') else (not y &lt;= x)
 </code></pre>
 
-<p>In python, there are 6 so called "Rich Comparison" methods, x &lt; y calls
-x.<strong>lt</strong>(y) and others are similar (<strong>le</strong> and &lt;=; <strong>gt</strong> and >=; <strong>eq</strong> and ==;
-<strong>ne</strong> and &lt;>). Arguments to rich comparison  methods are never coerced. see
+<p>In python, there are 6 so called “Rich Comparison” methods, x &lt; y calls
+x.<strong>lt</strong>(y) and others are similar (<strong>le</strong> and &lt;=; <strong>gt</strong> and &gt;=; <strong>eq</strong> and ==;
+<strong>ne</strong> and &lt;&gt;). Arguments to rich comparison  methods are never coerced. see
 <code>coercion &lt;http://docs.python.org/glossary.html#term-coercion&gt;</code>_</p>
 
-<h2>Code comments</h2>
-
+<h2 id="code-comments">Code comments</h2>
 <p>Why heapify(x) is O(n)?
 ~~~~~~~~~~~~~~~~~~~~~~~
-This is not obvious at first by seeing the code, given that there is a 'while'
-loop in <em>siftup and also a while loop in </em>siftdown(called in _siftup). Let's
+This is not obvious at first by seeing the code, given that there is a ‘while’
+loop in _siftup and also a while loop in _siftdown(called in _siftup). Let’s
 look into it further:</p>
 
-<p>1) in the while loop of <em>siftup, it takes O(L) time for nodes that L levels
+<p>1) in the while loop of _siftup, it takes O(L) time for nodes that L levels
    above leaves.
-2) and in the while loop of </em>siftdown called in <em>siftup, it takes at most L
-   steps, so </em>siftdown is O(L).
+2) and in the while loop of _siftdown called in _siftup, it takes at most L
+   steps, so _siftdown is O(L).
 3) since we have n/4 nodes in level 1, n/8 nodes in level 2, and finally one
    root node, which is lg(n) levels above leaf, so the total amount in the while
    loop of heapify is:</p>
 
-<p>| <strong>n/4 * c + n/8 * c + n/16 * 3c + ... + 1 * lg(n) * c</strong>, and let n/4 = 2<sup>k,</sup>
+<p>| <strong>n/4 * c + n/8 * c + n/16 * 3c + … + 1 * lg(n) * c</strong>, and let n/4 = 2^k,
   after simplification, we get:
-| <strong>c * 2<sup>k(1/2<sup>0</sup></sup> + 2/2<sup>1</sup> + 3/2<sup>2</sup> + ... + (k+1)/2<sup>k)**,</sup> as the limit of
-  </strong>(k+1)/2<sup>k**</sup> is 0 when k is infinite, so the term in the brackets bound to
-  a constant, from this we can conclude that heapify is O(2<sup>k),</sup> which is O(n).
+| <strong>c * 2^k(1/2^0 + 2/2^1 + 3/2^2 + … + (k+1)/2^k)</strong>, as the limit of
+  <strong>(k+1)/2^k</strong> is 0 when k is infinite, so the term in the brackets bound to
+  a constant, from this we can conclude that heapify is O(2^k), which is O(n).
 |</p>
 
 <p>Why it continues to find the smaller child until a leaf is hit in _siftup?

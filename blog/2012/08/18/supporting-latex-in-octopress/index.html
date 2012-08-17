@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Chao's Random Thoughts</title>
+  <title>Support LaTex in Octopress - Chao's Random Thoughts</title>
   <meta name="author" content="Chao Chu">
 
   
-  <meta name="description" content="It took me some time to finally get latex math formulas working in Octopress.
-If you googled ‘Octopress latex’, you can get quite a few online &hellip;">
-  
+  <meta name="description" content="How to add support of latex math in octopress">
+  <meta name="keywords" content="latex in octopress, kramdown, mathjax">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -19,7 +18,7 @@ If you googled ‘Octopress latex’, you can get quite a few online &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://chuchao333.github.com/">
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/">
   <link href="/favicon.ico" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,15 +97,12 @@ If you googled ‘Octopress latex’, you can get quite a few online &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/08/18/supporting-latex-in-octopress/">Support LaTex in Octopress</a></h1>
+      <h1 class="entry-title">Support LaTex in Octopress</h1>
     
     
       <p class="meta">
@@ -129,7 +125,7 @@ If you googled ‘Octopress latex’, you can get quite a few online &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>It took me some time to finally get latex math formulas working in Octopress.
+<div class="entry-content"><p>It took me some time to finally get latex math formulas working in Octopress.
 If you googled ‘Octopress latex’, you can get quite a few online resources about
 how to support latex in octopress, with various levels of complexity. In this
 post, I will write down how I achieve this.</p>
@@ -322,138 +318,16 @@ After this, we are ready to test latex math in our post. For example:</p>
 <p>And for inline latex code, just use <code>$\exp(-\frac{x^2}{2})$</code>, which will give
 $\exp(-\frac{x^2}{2})$.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/python-heapq/">Python Heapq</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
 
-<time datetime="2012-08-14T22:26:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="section" id="introduction">
-<h2>Introduction</h2>
-<p>The module provides an implementation of heap queue algorithm, also known as
-priority queue algorithm.</p>
-</div>
-<div class="section" id="highlights">
-<h2>Highlights</h2>
-<ul class="simple">
-<li>Zero-based indexing is used, so the children&#8217;s index of node with index k
-are (2*k + 1) and (2*k + 2) respectively.</li>
-<li>Internally a &#8216;min heap&#8217; is maintained rather than &#8216;max heap&#8217;, which is more
-generally used in algorithm textbooks.</li>
-<li>Three general functions based on heaps are also provided:</li>
-</ul>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c"># Merge multiple sorted inputs into a single sorted output</span>
-</span><span class="line"><span class="c"># (for example, merge timestamped entries from multiple log files)</span>
-</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">)</span>
-</span><span class="line">
-</span><span class="line"><span class="c"># The following two functions are effectively like</span>
-</span><span class="line"><span class="c"># sorted(iterable, key=key, reverse=True)[:n] and</span>
-</span><span class="line"><span class="c"># sorted(iterable, key=key)[:n],</span>
-</span><span class="line"><span class="c"># but they perform best with smaller values of n</span>
-</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">[,</span> <span class="n">key</span><span class="p">])</span>
-</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">[,</span> <span class="n">key</span><span class="p">]))</span>
-</span></code></pre></td></tr></table></div></figure></div>
-<div class="section" id="pythonic-stuff">
-<h2>Pythonic stuff</h2>
-<div class="section" id="rich-comparison-methods">
-<h3>Rich comparison methods</h3>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">cmp_lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-</span><span class="line">    <span class="c"># use __lt__ if available; otherwise, try __le__</span>
-</span><span class="line">    <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&#39;__lt__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="ow">not</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure><p>In python, there are 6 so called &quot;Rich Comparison&quot; methods, x &lt; y calls
-x.__lt__(y) and others are similar (__le__ and &lt;=; __gt__ and &gt;=; __eq__ and ==;
-__ne__ and &lt;&gt;). Arguments to rich comparison  methods are never coerced. see
-<a class="reference external" href="http://docs.python.org/glossary.html#term-coercion">coercion</a></p>
-</div>
-</div>
-<div class="section" id="code-comments">
-<h2>Code comments</h2>
-<div class="section" id="why-heapify-x-is-o-n">
-<h3>Why heapify(x) is O(n)?</h3>
-<p>This is not obvious at first by seeing the code, given that there is a &#8216;while&#8217;
-loop in _siftup and also a while loop in _siftdown(called in _siftup). Let&#8217;s
-look into it further:</p>
-<ol class="arabic simple">
-<li>in the while loop of _siftup, it takes O(L) time for nodes that L levels
-above leaves.</li>
-<li>and in the while loop of _siftdown called in _siftup, it takes at most L
-steps, so _siftdown is O(L).</li>
-<li>since we have n/4 nodes in level 1, n/8 nodes in level 2, and finally one
-root node, which is lg(n) levels above leaf, so the total amount in the while
-loop of heapify is:</li>
-</ol>
-<div class="line-block">
-<div class="line"><strong>n/4 * c + n/8 * c + n/16 * 3c + &#8230; + 1 * lg(n) * c</strong>, and let n/4 = 2^k,
-after simplification, we get:</div>
-<div class="line"><strong>c * 2^k(1/2^0 + 2/2^1 + 3/2^2 + &#8230; + (k+1)/2^k)</strong>, as the limit of
-<strong>(k+1)/2^k</strong> is 0 when k is infinite, so the term in the brackets bound to
-a constant, from this we can conclude that heapify is O(2^k), which is O(n).</div>
-<div class="line"><br /></div>
-</div>
-</div>
-<div class="section" id="why-it-continues-to-find-the-smaller-child-until-a-leaf-is-hit-in-siftup">
-<h3>Why it continues to find the smaller child until a leaf is hit in _siftup?</h3>
-<p>As explained in the comment by the module author, this is a ad hoc to reduce
-the comparisons on the following operations on the heap.</p>
-</div>
-</div></div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/">Introduction on Reading Source of Python Standard Libraries Series</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -465,157 +339,42 @@ the comparisons on the following operations on the heap.</p>
   
 
 
-<time datetime="2012-08-14T21:11:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I am going to start the series of posts on reading the source of python standard
-modules. I will go with the pure python modules first, and maybe later I can
-continue with C implementations of the modules. Let&#8217;s see how far I could go.</p>
-<div class="section" id="what-will-be-included">
-<h2>What will be included</h2>
-<ul class="simple">
-<li>A brief introduction of the module. (It should be very short, people can go to
-the standard library doc for more information.)</li>
-<li>Special highlights about the important APIs, implementation details.</li>
-<li>Python features/idioms/tricks/gotchas that worth the whistle, especially those
-I was not familiar with</li>
-<li>Detail explanations about the tricky part of the code if any</li>
-</ul>
-</div>
-<div class="section" id="what-will-not-be-included">
-<h2>What will not be included</h2>
-<ul class="simple">
-<li>The example usage of the various APIs, for this kind of stuff,
-<a class="reference external" href="http://www.doughellmann.com/PyMOTW/">Python module of the week</a> is a better
-place to go</li>
-</ul>
-<p>Also, alone the way, I may start another series on some specific &#8216;advanced topics&#8217;
-in python, like <strong>descriptor</strong>, <strong>decorator</strong>, <strong>method resolution order(mro)</strong>
-and so on. Mainly about why they are introduced into python, how they are used and
-the typical use cases. This is inspired by the blogs about
-<a class="reference external" href="http://python-history.blogspot.com/">python history</a></p>
-<p>This post will also be used to track my progress.</p>
-</div></div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2012-08-18T00:57:00+08:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/25/octopress-and-github/">Octopress and Github</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/octopress/'>Octopress</a>
+  
+</span>
 
 
-<time datetime="2012-07-25T23:21:00+08:00" pubdate data-updated="true">Jul 25<span>th</span>, 2012</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>This post documents how I set up this blog and the problems encounted. Octopress
-is quite popular recently and you can just find a huge number of bloggers who
-have written about how to set this up online. My main references are
-<a class="reference external" href="http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/">Setting up a blog on Octopress and github</a>
-and <a class="reference external" href="http://mrzhang.me/blog/blog-equals-github-plus-octopress.html">Blog = Github + Octopress</a> (In Chinese).</p>
+      <div class="sharing">
+  
+  
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/25/octopress-and-github/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/25/hello-octopress/">Hello Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
+        <a class="basic-alignment left" href="/blog/2012/08/14/python-heapq/" title="Previous Post: Python heapq">&laquo; Python heapq</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-25T02:31:00+08:00" pubdate data-updated="true">Jul 25<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is the first post, using Octopress to set up a tech blog on github is
-so cool!</p>
-
-<h2 id="to-do">TO DO:</h2>
-<hr />
-
-<ul>
-  <li>Add a ‘about’ page serving as the self introduction</li>
-  <li>Enable visitors to post comments</li>
-  <li>Add useful plugins</li>
-  <li>Prepare the post to summarise the process of setting all this things up</li>
-</ul>
-
-<h2 id="update-on-2012-07-27">Update on 2012-07-27:</h2>
-<hr />
-
-<p>So far, I have finished the basic settings of this blog. The changes include:</p>
-
-<ul>
-  <li>Change the default layout and fonts to my preference</li>
-  <li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
-  <li>Enable comment</li>
-  <li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
-</ul>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -687,6 +446,7 @@ so cool!</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -701,7 +461,10 @@ so cool!</p>
       var disqus_shortname = 'chaoc';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

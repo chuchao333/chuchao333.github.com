@@ -30,6 +30,39 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
   
 
 </head>
@@ -219,6 +252,8 @@ the comparisons on the following operations on the heap.</p>
         <a class="basic-alignment left" href="/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/" title="Previous Post: Introduction on reading source of python standard libraries series">&laquo; Introduction on reading source of python standard libraries series</a>
       
       
+        <a class="basic-alignment right" href="/blog/2012/08/18/supporting-latex-in-octopress/" title="Next Post: Support LaTex in Octopress">Support LaTex in Octopress &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -236,7 +271,7 @@ the comparisons on the following operations on the heap.</p>
     <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/octopress/'>Octopress (2)</a></li>
+    <li class='category'><a href='/blog/categories/octopress/'>Octopress (3)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (2)</a></li>
 
   </ul>
@@ -244,6 +279,10 @@ the comparisons on the following operations on the heap.</p>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/18/supporting-latex-in-octopress/">Support LaTex in Octopress</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/08/14/python-heapq/">Python heapq</a>
@@ -285,9 +324,12 @@ the comparisons on the following operations on the heap.</p>
     <a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
 <a style="font-size: 90%" href="/blog/tags/github/">github</a>
 <a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/kramdown/">kramdown</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 90%" href="/blog/tags/mathjax/">mathjax</a>
 <a style="font-size: 210%" href="/blog/tags/octopress/">octopress</a>
 <a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
-<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+<a style="font-size: 166%" href="/blog/tags/python/">python</a>
 
   </ul>
 </section>

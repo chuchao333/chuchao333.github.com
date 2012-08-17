@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="This is the first post, using Octopress to set up a tech blog on github is
-so cool! TO DO: Add a &#8216;about&#8217; page serving as the self &hellip;">
+so cool! TO DO: Add a ‘about’ page serving as the self introduction Enable &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -30,6 +30,39 @@ so cool! TO DO: Add a &#8216;about&#8217; page serving as the self &hellip;">
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
 
   
 
@@ -96,29 +129,26 @@ so cool! TO DO: Add a &#8216;about&#8217; page serving as the self &hellip;">
 <div class="entry-content"><p>This is the first post, using Octopress to set up a tech blog on github is
 so cool!</p>
 
-<h2>TO DO:</h2>
-
+<h2 id="to-do">TO DO:</h2>
 <hr />
 
 <ul>
-<li>Add a &#8216;about&#8217; page serving as the self introduction</li>
-<li>Enable visitors to post comments</li>
-<li>Add useful plugins</li>
-<li>Prepare the post to summarise the process of setting all this things up</li>
+  <li>Add a ‘about’ page serving as the self introduction</li>
+  <li>Enable visitors to post comments</li>
+  <li>Add useful plugins</li>
+  <li>Prepare the post to summarise the process of setting all this things up</li>
 </ul>
 
-
-<h2>Update on 2012-07-27:</h2>
-
+<h2 id="update-on-2012-07-27">Update on 2012-07-27:</h2>
 <hr />
 
 <p>So far, I have finished the basic settings of this blog. The changes include:</p>
 
 <ul>
-<li>Change the default layout and fonts to my preference</li>
-<li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
-<li>Enable comment</li>
-<li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
+  <li>Change the default layout and fonts to my preference</li>
+  <li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
+  <li>Enable comment</li>
+  <li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
 </ul>
 
 </div>
@@ -184,7 +214,7 @@ so cool!</p>
     <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/octopress/'>Octopress (2)</a></li>
+    <li class='category'><a href='/blog/categories/octopress/'>Octopress (3)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (2)</a></li>
 
   </ul>
@@ -192,6 +222,10 @@ so cool!</p>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/18/supporting-latex-in-octopress/">Support LaTex in Octopress</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/08/14/python-heapq/">Python heapq</a>
@@ -233,9 +267,12 @@ so cool!</p>
     <a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
 <a style="font-size: 90%" href="/blog/tags/github/">github</a>
 <a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/kramdown/">kramdown</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 90%" href="/blog/tags/mathjax/">mathjax</a>
 <a style="font-size: 210%" href="/blog/tags/octopress/">octopress</a>
 <a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
-<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+<a style="font-size: 166%" href="/blog/tags/python/">python</a>
 
   </ul>
 </section>
