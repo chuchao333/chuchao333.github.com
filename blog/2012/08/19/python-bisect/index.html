@@ -211,7 +211,7 @@ standard library.</p>
 </span></code></pre></td></tr></table></div></figure><p>It's easy to prove that the loop invariants are strong enough to imple the
 postcodition of the function(&#64;ensures). Does this function terminate? In the
 loop body, we have lower &lt; higher, so lower &lt;= mid &amp;&amp; mid &lt; higher, then the
-intervals from _lower_ to _mid_ and from _(mid+1)_ to _higher_ are strictly
+intervals from <em>lower</em> to <em>mid</em> and from <em>(mid+1)</em> to <em>higher</em> are strictly
 smaller than the original interval (lower, higher), unless we find the element,
 the difference between higher and lower will eventually become 0 and we will
 exit the loop.</p>
