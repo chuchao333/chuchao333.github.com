@@ -4,7 +4,7 @@
   <title><![CDATA[Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-08-18T02:33:11+08:00</updated>
+  <updated>2012-08-19T21:10:54+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -12,6 +12,197 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Python bisect]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <updated>2012-08-19T20:01:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <content type="html"><![CDATA[<div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>This module provides support for maintaining a list in sorted order without
+having to sort the list after each insertion. It uses a basic bisection
+algorithm similar with the classic binary search.</p>
+</div>
+<div class="section" id="review-of-binary-search">
+<h2>Review of binary search</h2>
+<p>According to <a class="reference external" href="http://www.amazon.com/Programming-Pearls-2nd-Edition-Bentley/dp/0201657880/ref=sr_1_1?ie=UTF8&amp;qid=1345379618&amp;sr=8-1&amp;keywords=programming+pearls">&#8216;Programming Pearls&#8217;</a>
+by Jon Bentley, It&#8217;s very hard to write a correct binary search(Unbelievable, Uh?).
+Below is the note from the book:</p>
+<blockquote class="highlights">
+I&#8217;ve assigned [binary search] in courses at Bell Labs and IBM.
+Professional programmers had a couple of hours to convert [its] description
+into a program in the language of their choice; a high-level pseudocode
+was fine. At the end of the speci?ed time, almost all the programmers
+reported that they had correct code for the task. We would then take thirty
+minutes to examine their code, which the programmers did with test cases.
+In several classes and with over a hundred programmers, the results varied
+little: ninety percent of the programmers found bugs in their programs (and
+I wasn&#8217;t always convinced of the correctness of the code in which no bugs were
+found). I was amazed: given ample time, only about ten percent of professional
+programmers were able to get this small program right. But they aren&#8217;t the only
+ones to ?nd this task difficult: in the history in Section 6.2.1 of his
+&#8216;Sorting and Searching&#8217;, Knuth points out that while the first binary search
+was published in 1946, the first published binary search without bugs did not
+appear until 1962.</blockquote>
+<p>Understanding how to use loop invariants in composing a program is very important,
+so let&#8217;s first implement a binary search and prove the correctness utilizing this.
+Here we use a simplified specification compared to the bsearch function in the C
+standard library.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="kt">int</span> <span class="n">binsearch</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class="line"><span class="c1">// @require 0 &lt;= n &amp;&amp; n &lt;= length(A)</span>
+</span><span class="line"><span class="c1">// @require is_sorted(A, n)</span>
+</span><span class="line"><span class="cm">/* @ensures (-1 == result &amp;&amp; !is_in(x, A, n))</span>
+</span><span class="line"><span class="cm">            || ((0 &lt;= result &amp;&amp; result &lt; n) &amp;&amp; A[result] == x)</span>
+</span><span class="line"><span class="cm">*/</span>
+</span><span class="line"><span class="p">{</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">higher</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">while</span> <span class="p">(</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="n">higher</span><span class="p">)</span>
+</span><span class="line">    <span class="c1">// @loop_invariant 0 &lt;= lower &amp;&amp; lower &lt;= higher &amp;&amp; higher &lt;= n</span>
+</span><span class="line">    <span class="c1">// @loop_invariant (lower == 0 || A[lower - 1] &lt; x)</span>
+</span><span class="line">    <span class="c1">// @loop_invariant (higher == n || A[higher] &gt; x)</span>
+</span><span class="line">    <span class="p">{</span>
+</span><span class="line">        <span class="n">mid</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="p">(</span><span class="n">higher</span> <span class="o">-</span> <span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class="line">        <span class="c1">// @assert lower &lt;= mid &amp;&amp; mid &lt; higher</span>
+</span><span class="line">        <span class="k">if</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+</span><span class="line">            <span class="k">return</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span>
+</span><span class="line">            <span class="n">lower</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class="line">        <span class="k">else</span>
+</span><span class="line">            <span class="n">higher</span> <span class="o">=</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">    <span class="p">}</span>
+</span><span class="line">    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure><p>It&#8217;s easy to prove that the loop invariants are strong enough to imple the
+postcodition of the function(&#64;ensures). Does this function terminate? In the
+loop body, we have lower &lt; higher, so lower &lt;= mid &amp;&amp; mid &lt; higher, then the
+intervals from _lower_ to _mid_ and from _(mid+1)_ to _higher_ are strictly
+smaller than the original interval (lower, higher), unless we find the element,
+the difference between higher and lower will eventually become 0 and we will
+exit the loop.</p>
+<p><strong>The bisect() functions provided in this module are useful for finding the
+insertion points but can be tricky or awkward to use for common searching
+tasks.</strong></p>
+</div>
+<div class="section" id="code-comments">
+<h2>Code comments</h2>
+<p>The above binsearch function will return the first of the elements that equals
+to the target if there are more than one. Sometimes it&#8217;s required to find the
+left most one or the right most one. We can achieve this by using the bisect()
+functions. Let&#8217;s examine the pre and post conditions, and also loop invariants.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">bisect_right</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># Let l be the original lo passed in, and h be hi. In order to differentiate.</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># @requires 0 &lt;= l &amp;&amp; l &lt; h &amp;&amp; h &lt;= len(a)</span>
+</span><span class="line">    <span class="c"># @requires is_sorted(a[l:h])</span>
+</span><span class="line">    <span class="c"># @ensures all e in a[l:result] have e &lt;= x, and all e in a[result:h] have e &gt; x</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">while</span> <span class="n">lo</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">:</span>
+</span><span class="line">        <span class="c"># @loop_invariant l &lt;= lo &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= h</span>
+</span><span class="line">        <span class="c"># @loop_invariant lo == l || a[lo - 1] &lt;= x</span>
+</span><span class="line">        <span class="c"># @loop_invariant hi == h || a[hi] &gt; x</span>
+</span><span class="line">        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span class="line">        <span class="c"># @assert lower &lt;= mid &amp;&amp; mid &lt; higher</span>
+</span><span class="line">        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+</span><span class="line">            <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span>
+</span><span class="line">        <span class="k">else</span><span class="p">:</span>
+</span><span class="line">            <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">lo</span>
+</span></code></pre></td></tr></table></div></figure><p>After exiting the loop, we have lo == hi. Now we have to distinguish some cases:</p>
+<ul class="simple">
+<li>If lo == l, from the third conjunct, we know that a[hi] &gt; x, and since lo == hi,
+we have a[lo] &gt; x. In this case, all e in a[l:h] &gt; x</li>
+<li>If hi == h, from the second conjunct, we know that a[lo - 1] &lt; x, in this case,
+all e in a[l:h] &lt;= x</li>
+<li>if lo != l and hi != h, from the second and third conjuncts, we know that
+a[lo - 1] &lt;= x, a[hi] &gt; x. The post condition still holds.</li>
+</ul>
+<p>We can do the same analysis on the function bisect_left().</p>
+<p>Note: In the pre condition I explicitly written down that lo &lt; hi is required, the
+code will directly return lo when hi is less than or equal to lo, but that&#8217;s simply
+meaningless, if this is the case, the sorted order of &#8216;a&#8217; after we insert element
+before the index returned by the function.</p>
+<div class="section" id="about-the-function-prototype">
+<h3>About the function prototype</h3>
+<p>In the doc of the module, it&#8217;s <strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong>
+while in the source code, it&#8217;s <strong>def bisect_left(a, x, lo=0, hi=None)</strong></p>
+<p><strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong> is not valid python code, you will
+get error like this: <strong>NameError: name &#8216;a&#8217; is not defined.</strong> This is because default
+values are computed and bound at the function definition time rather than when you
+call the function. This means that you can&#8217;t have a default which is dependent on
+something that is not known until the function is called.</p>
+</div>
+</div>
+<div class="section" id="pythonic-stuff">
+<h2>Pythonic stuff</h2>
+<div class="section" id="override-function-definitions-in-python">
+<h3>Override function definitions in Python</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c"># Overwrite above definitions with a fast C implementation</span>
+</span><span class="line"><span class="k">try</span><span class="p">:</span>
+</span><span class="line">    <span class="kn">from</span> <span class="nn">_bisect</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span class="line"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span class="line">    <span class="k">pass</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="gotcha-mutable-default-arguments">
+<h3>Gotcha &#8211; Mutable default arguments</h3>
+<p>See <a class="reference external" href="http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument">here</a>
+for more details.</p>
+</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
