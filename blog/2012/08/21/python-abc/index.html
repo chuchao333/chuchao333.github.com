@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Python abc - Chao's Random Thoughts</title>
+  <meta name="author" content="Chao Chu">
+
+  
+  <meta name="description" content="Notes on reading the source of abc module">
+  <meta name="keywords" content="abc, ABCMeta, python, metaclass">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2012/08/21/python-abc/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Chao's Random Thoughts" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chao's Random Thoughts</a></h1>
+  
+    <h2>Keep looking, don't settle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:chuchao333.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python Abc</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-21T21:06:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>This module provides the infrastructure for defining
+<a class="reference external" href="http://docs.python.org/glossary.html#term-abstract-base-class">abstract base classes</a>
+(ABCs) in Python. The ABCs define a minimal set of methods that establish the
+characteristic behavior of the type. For more details about this, see
+<a class="reference external" href="http://www.python.org/dev/peps/pep-3119/">PEP 3119</a>.</p>
+</div>
+<div class="section" id="highlights">
+<h2>Highlights</h2>
+<p>The module provides a <a class="reference external" href="http://docs.python.org/glossary.html#term-metaclass">metaclass</a>
+used to create ABCs. An ABC can be subclassed directly. The class also has a 'register'
+method to register unrelated concrete classes (including built-in classes) and unrelated
+ABCs as 'virtual subclasses'</p>
+<p>Also there are two decorators <em>abstractmethod</em> and <em>abstractproperty</em>, which will set
+the function object's attribute '__isabstractmethod__' to True. Only when all of the
+abstract methods and abstract properties are overriden, can a class that has a metaclass
+derived from ABCMeta be instantiated.</p>
+</div>
+<div class="section" id="code-comments">
+<h2>Code comments</h2>
+<div class="section" id="abcmeta-new">
+<h3>ABCMeta.__new__</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">mcls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+</span><span class="line">    <span class="n">cls</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">,</span> <span class="n">mcls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">mcls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+</span><span class="line">    <span class="c"># Compute set of abstract method names</span>
+</span><span class="line">    <span class="n">abstracts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">name</span>
+</span><span class="line">                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span class="line">                 <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&quot;__isabstractmethod__&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
+</span><span class="line">    <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+</span><span class="line">        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s">&quot;__abstractmethods__&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">()):</span>
+</span><span class="line">            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class="line">            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&quot;__isabstractmethod__&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+</span><span class="line">                <span class="n">abstracts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span><span class="line">    <span class="n">cls</span><span class="o">.</span><span class="n">__abstractmethods__</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># chaoc: caches are the typical usages of weak references</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># Set up inheritance registry</span>
+</span><span class="line">    <span class="n">cls</span><span class="o">.</span><span class="n">_abc_registry</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+</span><span class="line">    <span class="n">cls</span><span class="o">.</span><span class="n">_abc_cache</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+</span><span class="line">    <span class="n">cls</span><span class="o">.</span><span class="n">_abc_negative_cache</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+</span><span class="line">    <span class="n">cls</span><span class="o">.</span><span class="n">_abc_negative_cache_version</span> <span class="o">=</span> <span class="n">ABCMeta</span><span class="o">.</span><span class="n">_abc_invalidation_counter</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">cls</span>
+</span></code></pre></td></tr></table></div></figure><ul class="simple">
+<li>It first creates a 'type' object cls. (super(ABCMeta, mcls) is 'type')</li>
+<li>Iterate through all the attributes (including all the attributes inherited
+from all the bases), if any of them have '__isabstractmethod__' set to true,
+add it to cls's __abstractmethods__.</li>
+<li>Initialize the attributes '_abc_registry', '_abc_cache', '_abc_negative_cache'
+and '_abc_negative_cache_version', which are used to speed up the check in
+__instancecheck__ and __subclasscheck__.</li>
+</ul>
+</div>
+<div class="section" id="abcmeta-register-cls-subclass">
+<h3>ABCMeta.register(cls, subclass)</h3>
+<p>See the added comments in line
+.. code-block:: python</p>
+<blockquote>
+<dl class="docutils">
+<dt>def register(cls, subclass):</dt>
+<dd><p class="first">&quot;&quot;&quot;Register a virtual subclass of an ABC.&quot;&quot;&quot;
+# chaoc: sanity check to make sure that subclass is class type
+# either a type object (for new style classes) or the type is
+# the same as ClassType(for old style classes)
+if not isinstance(subclass, (type, types.ClassType)):</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 70)</p>
+Unexpected indentation.</div>
+<blockquote>
+raise TypeError(&quot;Can only register classes&quot;)</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 71)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<dl class="docutils">
+<dt>if issubclass(subclass, cls):</dt>
+<dd>return  # Already a subclass</dd>
+</dl>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 73)</p>
+Definition list ends without a blank line; unexpected unindent.</div>
+<p># Subtle: test for cycles <em>after</em> testing for &quot;already a subclass&quot;;
+# this means we allow X.register(X) and interpret it as a no-op.
+if issubclass(cls, subclass):</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 76)</p>
+Unexpected indentation.</div>
+<blockquote>
+# This would create a cycle, which is bad for the algorithm below
+raise RuntimeError(&quot;Refusing to create an inheritance cycle&quot;)</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 78)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<p class="last">cls._abc_registry.add(subclass)
+ABCMeta._abc_invalidation_counter += 1  # Invalidate negative cache</p>
+</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="abcmeta-instancecheck">
+<h3>ABCMeta.__instancecheck__</h3>
+<p>See the added comments in line
+.. code-block:: python</p>
+<blockquote>
+<dl class="docutils">
+<dt>def __instancecheck__(cls, instance):</dt>
+<dd><p class="first">&quot;&quot;&quot;Override for isinstance(instance, cls).&quot;&quot;&quot;
+# Inline the cache checking when it's simple.
+subclass = getattr(instance, '__class__', None)
+if subclass is not None and subclass in cls._abc_cache:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 92)</p>
+Unexpected indentation.</div>
+<blockquote>
+return True</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 93)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<p>subtype = type(instance)
+# Old-style instances
+if subtype is _InstanceType:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 96)</p>
+Unexpected indentation.</div>
+<blockquote>
+subtype = subclass</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 97)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<p># chaoc: subtype will also be subclass for old style classes
+# as assigned in the above step
+if subtype is subclass or subclass is None:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 100)</p>
+Unexpected indentation.</div>
+<blockquote>
+<p># chaoc: check if the negative cache is safe to use or not
+if (cls._abc_negative_cache_version ==</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 102)</p>
+Unexpected indentation.</div>
+<blockquote>
+ABCMeta._abc_invalidation_counter and
+subtype in cls._abc_negative_cache):
+return False</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 105)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<p># Fall back to the subclass check.
+return cls.__subclasscheck__(subtype)</p>
+</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 107)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<dl class="last docutils">
+<dt>return (cls.__subclasscheck__(subclass) or</dt>
+<dd>cls.__subclasscheck__(subtype))</dd>
+</dl>
+</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="abcmeta-subclasscheck">
+<h3>ABCMeta.__subclasscheck__</h3>
+<p>The code and comment in this function is very clear and straightforward.</p>
+<p>Just make sure the different cases needed to check:</p>
+<ol class="arabic simple">
+<li>check the subclass hook</li>
+<li>check if it's a direct subclass through __mro__</li>
+<li>check if it's a subclass of a registered class (issubclass is called to do
+recursive check)</li>
+<li>check if it's a subclass of a subclass (issubclass is called to do recursive
+check)</li>
+</ol>
+<p>In this post, we only talk about the defitions of ABCMeta. We will see the
+typical usages in the <strong>collections</strong> module.</p>
+</div>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-21T21:06:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/19/python-bisect/" title="Previous Post: Python bisect">&laquo; Python bisect</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/octopress/'>Octopress (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/21/python-abc/">Python abc</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/19/python-bisect/">Python bisect</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/18/supporting-latex-in-octopress/">Support LaTex in Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/14/python-heapq/">Python heapq</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/">Introduction on reading source of python standard libraries series</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Recent Comments</h1>
+        <div id="dsq-recentcomments" class="dsq-widget">
+            <script type="text/javascript" src="http://disqus.com/forums/chaoc/recent_comments_widget.js?hide_avatars=1">
+            </script>
+        </div>
+</section>
+
+<section>
+    <h2>Reading List</h2>
+    <div>
+        <script type="text/javascript" src="http://www.douban.com/service/badge/3607474/?show=dolist&amp;n=6&amp;columns=3&amp;hidelogo=yes&amp;cat=book" >
+        </script>
+    </div>
+</section>
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+    <a style="font-size: 90%" href="/blog/tags/abcmeta/">ABCMeta</a>
+<a style="font-size: 90%" href="/blog/tags/abc/">abc</a>
+<a style="font-size: 90%" href="/blog/tags/bisect/">bisect</a>
+<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/github/">github</a>
+<a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/metaclass/">metaclass</a>
+<a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
+<a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
+<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Chao Chu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2012/08/21/python-abc/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2012/08/21/python-abc/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
