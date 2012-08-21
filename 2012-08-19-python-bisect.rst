@@ -78,7 +78,7 @@ standard library.
 It's easy to prove that the loop invariants are strong enough to imple the
 postcodition of the function(@ensures). Does this function terminate? In the
 loop body, we have lower < higher, so lower <= mid && mid < higher, then the
-intervals from _lower_ to _mid_ and from _(mid+1)_ to _higher_ are strictly
+intervals from *lower* to *mid* and from *(mid+1)* to *higher* are strictly
 smaller than the original interval (lower, higher), unless we find the element,
 the difference between higher and lower will eventually become 0 and we will
 exit the loop.
