@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: metaclass | Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/blog/tags/metaclass/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2012-08-21T23:46:50+08:00</updated>
+  <updated>2012-08-24T02:29:02+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -77,8 +77,9 @@ and ‘_abc_negative_cache_version’, which are used to speed up the check in
 
 <p>ABCMeta.register(cls, subclass)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-See the added comments in line
-.. code-block:: python</p>
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
 
 <pre><code>def register(cls, subclass):
     """Register a virtual subclass of an ABC."""
@@ -100,8 +101,9 @@ See the added comments in line
 
 <p>ABCMeta.<strong>instancecheck</strong>
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-See the added comments in line
-.. code-block:: python</p>
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
 
 <pre><code>def __instancecheck__(cls, instance):
     """Override for isinstance(instance, cls)."""
