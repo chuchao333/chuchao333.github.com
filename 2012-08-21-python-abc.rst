@@ -70,6 +70,7 @@ ABCMeta.__new__
 ABCMeta.register(cls, subclass)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 See the added comments in line
+
 .. code-block:: python
 
     def register(cls, subclass):
@@ -93,6 +94,7 @@ See the added comments in line
 ABCMeta.__instancecheck__
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 See the added comments in line
+
 .. code-block:: python
 
     def __instancecheck__(cls, instance):
