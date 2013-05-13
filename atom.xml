@@ -4,7 +4,7 @@
   <title><![CDATA[Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2013-01-06T23:38:03+08:00</updated>
+  <updated>2013-05-14T01:03:59+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SICP section 1.1]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
+    <updated>2013-05-14T00:39:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
+    <content type="html"><![CDATA[<blockquote class="highlights">
+Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The evolution
+of a process is directed by pattern of rules called a program.</blockquote>
+<p>Why use Lisp for the book?</p>
+<blockquote class="highlights">
+The most significant unique feature of Lisp is the fact that Lisp descriptions
+of processes, called procedures, can themselves be represented and manipulated
+as Lisp data. The importance of this is that there are powerful program-design
+techniques that rely on the ability to blur the traditional distinction between
+&quot;passive&quot; data and &quot;active&quot; processes.</blockquote>
+<p>The three mechanisms of combining simple ideas to form more complex ideas in any
+powerful programming languages:</p>
+<ol class="arabic simple">
+<li>primitive expressions</li>
+<li>means of combination</li>
+<li>means of abstraction</li>
+</ol>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Coursera online functional programming course - a retrospective]]></title>

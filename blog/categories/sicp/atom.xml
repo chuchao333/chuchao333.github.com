@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: SICP | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/categories/sicp/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2013-05-14T01:03:59+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SICP section 1.1]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
+    <updated>2013-05-14T00:39:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
+    <content type="html"><![CDATA[<p>.. highlights::</p>
+
+<pre><code>Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The evolution
+of a process is directed by pattern of rules called a program.
+</code></pre>
+
+<p>Why use Lisp for the book?</p>
+
+<p>.. highlights::
+    The most significant unique feature of Lisp is the fact that Lisp descriptions
+    of processes, called procedures, can themselves be represented and manipulated
+    as Lisp data. The importance of this is that there are powerful program-design
+    techniques that rely on the ability to blur the traditional distinction between
+    “passive” data and “active” processes.</p>
+
+<p>The three mechanisms of combining simple ideas to form more complex ideas in any
+powerful programming languages:</p>
+
+<ol>
+  <li>primitive expressions
+#. means of combination
+#. means of abstraction</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
