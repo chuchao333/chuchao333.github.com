@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SICP | Chao's Random Thoughts]]></title>
   <link href="http://chuchao333.github.com/blog/tags/sicp/atom.xml" rel="self"/>
   <link href="http://chuchao333.github.com/"/>
-  <updated>2013-06-13T00:38:57+08:00</updated>
+  <updated>2013-06-24T23:50:28+08:00</updated>
   <id>http://chuchao333.github.com/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
@@ -14,7 +14,354 @@
 
   
   <entry>
-    <title type="html"><![CDATA[SICP section 1.1]]></title>
+    <title type="html"><![CDATA[SICP Section 1.2]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2/"/>
+    <updated>2013-06-14T00:54:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2</id>
+    <content type="html"><![CDATA[<p>Recursive Process V.S. Iterative Process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<ul>
+  <li>
+    <p>Recursive process</p>
+
+    <p>The substitution model of a recursive process reveals a shape of expansion
+followed by constraction. The expansion occurs as the process builds up a
+chain of defered operations. The contraction occurs as the operations are
+actually performed.</p>
+  </li>
+  <li>
+    <p>Iterative process</p>
+
+    <p>An iterative process is one whose state can be summarized by a fixed number
+of state variables, together with a fixed rule that describes how the state
+variables should be updated as the process moves from state to state and an
+(optional) end test that specifies the conditions under which the process
+should terminate.</p>
+  </li>
+</ul>
+
+<p>In the iterative case, the program variables provide a complete description
+of the state of the process at any point, while in the recursive case, there
+is some additional “hidden” information, maintained by the interpreter and not
+contained in the program variables.</p>
+
+<p>.. highlights::</p>
+
+<pre><code>In contrasting iteration and recursion, we must be careful not to confuse
+the notion of a recursive process with the notion of a recursive procedure.
+When we describe a procedure as recursive, we are referring to the
+syntactic fact that the procedure definition refers (either directly or
+indirectly) to the procedure itself. But when we describe a process as
+following a pattern that is, say, linearly recursive, we are speaking about
+how the process evolves, not about the syntax of how a procedure is written.
+It may seem disturbing that we refer to a recursive procedure as generating
+an iterative process.
+</code></pre>
+
+<p>Lame’s Theorem
+~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>If Euclid's Algorithm requires k steps to compute the GCD of some pair,
+then the smaller number in the pair must be greater than or equal to the
+kth Fibonacci number.
+</code></pre>
+
+<p>Fermat’s Little Theorem
+~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>If n is a prime number and a is any positive integer less than n, then a
+raised to the nth power is congruent to a modulo n.
+</code></pre>
+
+<p>Exercises
+~~~~~~~~~</p>
+
+<p><strong>1.9</strong>
+Answer: The first process is recursive and the second one is iterative.</p>
+
+<p><strong>1.10</strong>
+Answer: from the definition of (A x y), we have:</p>
+
+<p>(A 1 10) = A(0 (A 1 9)) = 2 * (A 1 9) = … = 2^9 * (A 1 1) = 2^10</p>
+
+<p>(A 2 4) = 65536</p>
+
+<p>(A 3 3) = 65536</p>
+
+<p>(f n) computes <em>2n</em></p>
+
+<p>(g n) computes <em>2^n</em></p>
+
+<p>(h n) computes <em>2^2^2… (n times)</em></p>
+
+<p><strong>1.11</strong>
+Answer: This is similar with the example of computing Fibonacci number.</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (f-recursive n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        ((= n 2) 2)
+        (else (+ (f-recursive (- n 1))
+                 (* (f-recursive (- n 2)) 2)
+                 (* (f-recursive (- n 3)) 3)))))
+
+
+(define (f-iterative n)
+  (f-iter 0 1 2 n))
+
+(define (f-iter a b c count)
+  (cond ((= count 0) a)
+        ((= count 1) b)
+        ((= count 2) c)
+        (else (f-iter b c (+ c (* b 2) (* a 3)) (- count 1)))))
+</code></pre>
+
+<p><strong>1.12</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; both row and col indexes start at 0
+(define (pascal-triangle row col)
+  (cond ((= col 0) 1)
+        ((= row col) 1)
+        (else (+ (pascal-triangle (- row 1) (- col 1))
+                 (pascal-triangle (- row 1) col)))))
+</code></pre>
+
+<p><strong>1.15</strong>
+Answer:</p>
+
+<p>a. from the the procedure definition, suppose <em>p</em> will be called t times,
+we have:</p>
+
+<p>a / (3^t) &lt;= 0.1, which leads to:</p>
+
+<p>log(10a) &lt;= t, so t = ceiling (log(10a)) = 5, (the base of the log is 3)</p>
+
+<p>b. both the space and number of steps depend on how many times <em>p</em> is called,
+so it’s O(t) = O(log(a)).</p>
+
+<p><strong>1.16</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (fast-expt b n)
+  (fast-expt-iter b n 1))
+
+(define (fast-expt-iter b n product)
+  (cond ((= n 0) product)
+        ((even? n) (fast-expt-iter (square b) (/ n 2) product))
+        (else (fast-expt-iter b (- n 1) (* b product)))))
+
+(define (square x) (* x x))
+
+(define (even? n)
+  (= (remainder n 2) 0))
+</code></pre>
+
+<p><strong>1.17</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (mul a b)
+  (cond ((= b 0) 0)
+        ((even? b) (mul (double a) (halve b)))
+        (else (+ a (mul a (- b 1))))))
+
+(define (double x) (* x 2))
+(define (halve x) (/ x 2))
+</code></pre>
+
+<p><strong>1.18</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (mul a b)
+  (mul-iter a b 0))
+
+(define (mul-iter a b sum)
+  (cond ((= b 0) sum)
+        ((even? b) (mul-iter (double a) (halve b) sum))
+        (else (mul-iter a (- b 1) (+ a sum)))))
+
+
+(define (double x) (* x 2))
+(define (halve x) (/ x 2))
+</code></pre>
+
+<p><strong>1.19</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; use the matrix multiplication to represent the transformation
+
+;                       0 1
+; (fib(n-1), fib(n)) *        = (fib(n), fib(n-1) + fib(n)) = (fib(n), fib(n+1))
+;                       1 1
+
+; a &lt;- a + b
+; b &lt;- a
+
+; the state transformation above is just a special case of the below one when
+; p = 0 and q = 1
+
+; a &lt;- bq + aq + ap
+; b &lt;- bp + aq
+
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q count)
+  (cond ((= count 0) b)
+        ((even? count)
+         (fib-iter
+           a
+           b
+           (+ (square p) (square q))
+           (+ (square q) (* p q 2))
+           (/ count 2)))
+  (else (fib-iter
+          (+ (* b q) (* a q) (* a p))
+          (+ (* b p) (* a q))
+          p
+          q
+          (- count 1)))))
+
+(define (square x) (* x x))
+</code></pre>
+
+<p><strong>1.21</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; the following expressions produce
+; 199
+; 1999
+; 7
+
+(smallest-divisor 199)
+(smallest-divisor 1999)
+(smallest-divisor 19999)
+</code></pre>
+
+<p><strong>1.25</strong>
+Answer:</p>
+
+<p>Since <em>Scheme</em> has built-in support for arbitrary precision arithmetic, the
+procedure will produce the same result as the original <em>expmod</em>, however,
+it will be very inefficient since the huge number arithmetic will take much
+longer time than the numbers can be represented by a single computer word.</p>
+
+<p>The original <em>expmod</em> used the successive squaring, the numbers to be processed
+will never be larger than m^2.</p>
+
+<p><strong>1.26</strong>
+Answer:</p>
+
+<p>With the calling of <em>square</em>, the original problem can be reduced to a sub
+problem with half of the size at each of the step when even? test is true.
+So T(n) = T(n/2) = O(logn)</p>
+
+<p>However, if the explicit multiplication used instead, the recursive call
+of expmod will be evaluated twice, it not only just compute the sub
+problems two time, it is actually a tree recursion like the first solution
+for computing fibnacci sequence, so the number of expmod calls grow
+exponentially, which conclues that T(n) = O(2^n * logn) = O(n)</p>
+
+<p><strong>1.27</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (fermat-test n)
+  (fermat-test-iter n 2))
+
+(define (fermat-test-iter n a)
+  (cond ((= n a) true)
+        ((not (= (expmod a n n) a)) false)
+        (else (fermat-test-iter n (+ a 1)))))
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m)) m))
+        (else (remainder (* base (expmod base (- exp 1) m)) m))))
+
+(define (square x) (* x x))
+
+
+; Carmichael numbers
+(fermat-test 561)
+(fermat-test 1105)
+(fermat-test 1729)
+(fermat-test 2465)
+(fermat-test 2821)
+(fermat-test 6601)
+; these all give #t
+
+(prime? 561)
+(prime? 1105)
+(prime? 1729)
+(prime? 2465)
+(prime? 2821)
+(prime? 6601)
+; these all give #f
+</code></pre>
+
+<p><strong>1.28</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (miller-rabin-test n)
+  (define (try-it a)
+    (= (expmod-with-signal a (- n 1) n) 1))
+  (try-it (+ 2 (random (- n 2)))))
+
+(define (expmod-with-signal base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (square-with-signal (expmod-with-signal base (/ exp 2) m) m))
+        (else 
+         (remainder (* base (expmod-with-signal base (- exp 1) m)) m))))
+
+(define (square-with-signal a n)
+  (if (and (not (= a 1))
+           (not (= a (- n 1)))
+           (= (remainder (* a a) n) 1))
+      0
+      (remainder (* a a) n)))
+
+
+(miller-rabin-test 561)
+(miller-rabin-test 1105)
+(miller-rabin-test 1729)
+(miller-rabin-test 2465)
+(miller-rabin-test 2821)
+(miller-rabin-test 6601)
+; these will all give #f with quite a chance, but with enough runs, it will
+; have some false positive
+
+(newline)
+
+(miller-rabin-test 7)
+(miller-rabin-test 23)
+(miller-rabin-test 103)
+(miller-rabin-test 1009)
+(miller-rabin-test 1019)
+(miller-rabin-test 1000033)
+; these will always all give #t
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SICP Section 1.1]]></title>
     <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
     <updated>2013-05-14T00:39:00+08:00</updated>
     <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
