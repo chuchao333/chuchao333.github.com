@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "SICP section 1.1"
+title: "SICP Section 1.1"
 date: 2013-05-14 00:39
 comments: true
 categories: SICP
-tags: [SICP, Section 1] 
+tags: [SICP, Chapter 1, Section 1.1] 
 keywords: SICP
 ---
 
