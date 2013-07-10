@@ -9,9 +9,8 @@
   <meta name="author" content="Chao Chu">
 
   
-  <meta name="description" content="Recursive Process V.S. Iterative Process Recursive process
-The substitution model of a recursive process reveals a shape of expansion
-followed by &hellip;">
+  <meta name="description" content="Procedures as Arguments
+Why &#8216;high order procedures&#8217; is useful? Often the same programming pattern will be used with a number of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -102,6 +101,1146 @@ followed by &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T01:06:00+08:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="section" id="procedures-as-arguments">
+<h2>Procedures as Arguments</h2>
+<p>Why &#8216;high order procedures&#8217; is useful?</p>
+<blockquote class="highlights">
+Often the same programming pattern will be used with a number of different
+procedures. To express such patterns as concepts, we will need to construct
+procedures that can accept procedures as arguments or return procedures as
+values. Procedures that manipulate procedures are called high-order
+procedures, they can serve as powerful abstraction mechanisms, vastly
+increaseing the expressive power of our language.</blockquote>
+</div>
+<div class="section" id="lambda">
+<h2>Lambda</h2>
+<ul class="simple">
+<li>Using lambda to create anonymous functions:<ul>
+<li><strong>(define (plus4 x) (+ x 4))</strong> is <em>equivalent to</em> <strong>(define plus4 (lambda (x) (+ x 4)))</strong></li>
+</ul>
+</li>
+<li>Using lambda(let) to create local variables</li>
+</ul>
+<blockquote class="highlights">
+Sometimes we can use internal definitions to get the same effect as with let.</blockquote>
+<p>And in which cases we couldn&#8217;t get the same effect?</p>
+</div>
+<div class="section" id="abstractions-and-first-class-procedures">
+<h2>Abstractions and first-class procedures</h2>
+<blockquote class="highlights">
+As programmers, we should be alert to oppotunities to identify the underlying
+abstractions in our programs and to build upon then and generalize them to
+create more powerful abstractions. This is not to say one should always write
+programs in the most abstract way possible; expert programmers know how to
+choose the level of abstraction appropriate to their task. But it&#8217;s important
+to be able to think in terms of these abstractions, so that we can be ready
+to apply them in new contexts.</blockquote>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises</h2>
+<p><strong>1.29</strong>
+Answer:</p>
+<p>This is not very hard, just simply translate the simpson rule definition to code:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">simpson-rule</span> <span class="nv">f</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="c1">; still use &#39;define&#39; since we haven&#39;t learned &#39;let&#39; till now</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="nv">h</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">- </span><span class="nv">b</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">n</span><span class="p">))</span>
+</span><span class="line">  <span class="c1">; the procedure to compute &#39;yk&#39;, the helper method used by &#39;term&#39;</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">y</span> <span class="nv">k</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">a</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k</span> <span class="nv">h</span><span class="p">))))</span>
+</span><span class="line">  <span class="c1">; get the &#39;next and &#39;term for the sum procedure</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">next</span> <span class="nv">k</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">k</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">term</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="k">or </span><span class="p">(</span><span class="nb">= </span><span class="nv">k</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="nv">k</span> <span class="nv">n</span><span class="p">))</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">             <span class="p">((</span><span class="nb">even? </span><span class="nv">k</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class="line">             <span class="p">((</span><span class="nb">odd? </span><span class="nv">k</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
+</span><span class="line">       <span class="p">(</span><span class="nf">y</span> <span class="nv">k</span><span class="p">)))</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">* </span><span class="nv">h</span> <span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="mi">0</span> <span class="nv">next</span> <span class="nv">n</span><span class="p">))</span> <span class="mi">3</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="mi">0</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">       <span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">integral</span> <span class="nv">f</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">dx</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">add-dx</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">dx</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">sum</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">a</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">dx</span> <span class="mf">2.0</span><span class="p">))</span> <span class="nv">add-dx</span> <span class="nv">b</span><span class="p">)</span> <span class="nv">dx</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cube</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">simpson-rule</span> <span class="nv">cube</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">100.0</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">simpson-rule</span> <span class="nv">cube</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">1000.0</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">integral</span> <span class="nv">cube</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">0.01</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">integral</span> <span class="nv">cube</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mf">0.001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; the output:</span>
+</span><span class="line"><span class="c1">; 0.24999998999999987</span>
+</span><span class="line"><span class="c1">; 0.24999999999900027</span>
+</span><span class="line"><span class="c1">; 0.24998750000000042</span>
+</span><span class="line"><span class="c1">; 0.249999875000001</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.30</strong>
+Answer:</p>
+<p>Put both the recursive and iterative versions here to compare:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="mi">0</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">       <span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum-iter</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">a</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">result</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">result</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">a</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">sum</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">sum-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">sum</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">sum-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p>They produce the same results as expected.</p>
+<p><strong>1.31</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">product</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="mi">1</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">       <span class="p">(</span><span class="nf">product</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">product-iter</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">cur</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">cur</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">      <span class="nv">result</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">cur</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">term</span> <span class="nv">cur</span><span class="p">)</span> <span class="nv">result</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">a</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">factorial</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">identity</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">product</span> <span class="nv">identity</span> <span class="mi">1</span> <span class="nv">inc</span> <span class="nv">n</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">inc</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">product</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">product-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">factorial</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">factorial</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">product</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">product-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; compute the approximations to PI using the formula:</span>
+</span><span class="line"><span class="c1">;; PI   2*4*4*6*6*8...</span>
+</span><span class="line"><span class="c1">;; -- = --------------</span>
+</span><span class="line"><span class="c1">;; 4    3*3*5*5*7*7...</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; here, term is (2n/(2n + 1) * 2(n+1) /(2n + 1)), n = 1, 2, 3, ...</span>
+</span><span class="line"><span class="p">(</span><span class="nf">/</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">product-iter</span>
+</span><span class="line">    <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">n</span><span class="p">)</span>
+</span><span class="line">      <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">n</span> <span class="mf">1.0</span><span class="p">))))</span>
+</span><span class="line">    <span class="mi">1</span>
+</span><span class="line">    <span class="nv">inc</span>
+</span><span class="line">    <span class="mi">50</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">product-iter</span>
+</span><span class="line">    <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">n</span><span class="p">)</span>
+</span><span class="line">      <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">n</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">n</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)))</span>
+</span><span class="line">    <span class="mi">1</span>
+</span><span class="line">    <span class="nv">inc</span>
+</span><span class="line">    <span class="mi">50</span><span class="p">)</span>
+</span><span class="line"><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p>There might be better ways to translate the formula. The solution above the
+is not veru accurate and if the upper bound is too large (say 100), it will
+yield to &#8216;nan+&#8217;.</p>
+<p><strong>1.32</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">accumulate</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">null-value</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">combiner</span> <span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">              <span class="p">(</span><span class="nf">accumulate</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">accumulate-iter</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">cur</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">cur</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">      <span class="nv">result</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">cur</span><span class="p">)</span> <span class="p">(</span><span class="nf">combiner</span> <span class="p">(</span><span class="nf">term</span> <span class="nv">cur</span><span class="p">)</span> <span class="nv">result</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">a</span> <span class="nv">null-value</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="c1">; (accumulate + 0 term a next b))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">accumulate-iter</span> <span class="nv">+</span> <span class="mi">0</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">product</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="c1">; (accumulate * 1 term a next b))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">accumulate-iter</span> <span class="nv">*</span> <span class="mi">1</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">sum</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">product</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">sum</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">product</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">1</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span> <span class="mi">5</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.33</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">filtered-accumulate</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="nv">a</span> <span class="nv">next</span> <span class="nv">b</span> <span class="nv">filter</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">null-value</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">filter</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">combiner</span> <span class="p">(</span><span class="nf">term</span> <span class="nv">a</span><span class="p">)</span>
+</span><span class="line">                <span class="p">(</span><span class="nf">filtered-accumulate</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span> <span class="nv">filter</span><span class="p">))</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">filtered-accumulate</span> <span class="nv">combiner</span> <span class="nv">null-value</span> <span class="nv">term</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">next</span> <span class="nv">b</span> <span class="nv">filter</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">prime?</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="p">(</span><span class="nf">smallest-divisor</span> <span class="nv">n</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">smallest-divisor</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">find-divisor</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">find-divisor</span> <span class="nv">n</span> <span class="nv">test-divisor</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">&gt; </span><span class="p">(</span><span class="nf">square</span> <span class="nv">test-divisor</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">        <span class="p">((</span><span class="nf">divides?</span> <span class="nv">test-divisor</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">test-divisor</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">else </span><span class="p">(</span><span class="nf">find-divisor</span> <span class="nv">n</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">test-divisor</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">divides?</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="nb">remainder </span><span class="nv">b</span> <span class="nv">a</span><span class="p">)</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">inc</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">identity</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; return a procedure Integer -&gt; Boolean</span>
+</span><span class="line"><span class="c1">; that check if the given integer is relative prime with n</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">relative-prime?</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="nb">gcd </span><span class="nv">n</span> <span class="nv">a</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">  <span class="nv">f</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">gcd </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">b</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">a</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">gcd </span><span class="nv">b</span> <span class="p">(</span><span class="nb">remainder </span><span class="nv">a</span> <span class="nv">b</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">filtered-accumulate</span> <span class="nv">+</span> <span class="mi">0</span> <span class="nv">square</span> <span class="mi">2</span> <span class="nv">inc</span> <span class="mi">10</span> <span class="nv">prime?</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">filtered-accumulate</span> <span class="nv">*</span> <span class="mi">1</span> <span class="nv">identity</span> <span class="mi">1</span> <span class="nv">inc</span> <span class="mi">10</span> <span class="p">(</span><span class="nf">relative-prime?</span> <span class="mi">10</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.34</strong>
+Answer:</p>
+<p>Apply (f f) with get (f 2), while tring to apply (f 2), error will be issued
+since a procedure is expected but an integer parameter 2 is given.</p>
+<p><strong>1.35</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">tolerance</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">guess</span><span class="p">)))</span>
+</span><span class="line">      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">next</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">next</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">try</span> <span class="nv">next</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">try</span> <span class="nv">first-guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; since the golden-ratio x satisfies that x^2 = x + 1</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">golden-ratio</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="p">(</span><span class="nb">/ </span><span class="mi">1</span> <span class="nv">x</span><span class="p">)))</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">golden-ratio</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.36</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">tolerance</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">display </span><span class="s">&quot;current guess is: &quot;</span> <span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">display </span><span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">newline</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">guess</span><span class="p">)))</span>
+</span><span class="line">      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">next</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">next</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">try</span> <span class="nv">next</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">try</span> <span class="nv">first-guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; without average damping</span>
+</span><span class="line"><span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">log </span><span class="mi">1000</span><span class="p">)</span> <span class="p">(</span><span class="nb">log </span><span class="nv">x</span><span class="p">)))</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; output below:</span>
+</span><span class="line"><span class="c1">; current guess is: 2.0</span>
+</span><span class="line"><span class="c1">; current guess is: 9.965784284662087</span>
+</span><span class="line"><span class="c1">; current guess is: 3.004472209841214</span>
+</span><span class="line"><span class="c1">; current guess is: 6.279195757507157</span>
+</span><span class="line"><span class="c1">; current guess is: 3.759850702401539</span>
+</span><span class="line"><span class="c1">; current guess is: 5.215843784925895</span>
+</span><span class="line"><span class="c1">; current guess is: 4.182207192401397</span>
+</span><span class="line"><span class="c1">; current guess is: 4.8277650983445906</span>
+</span><span class="line"><span class="c1">; current guess is: 4.387593384662677</span>
+</span><span class="line"><span class="c1">; current guess is: 4.671250085763899</span>
+</span><span class="line"><span class="c1">; current guess is: 4.481403616895052</span>
+</span><span class="line"><span class="c1">; current guess is: 4.6053657460929</span>
+</span><span class="line"><span class="c1">; current guess is: 4.5230849678718865</span>
+</span><span class="line"><span class="c1">; current guess is: 4.577114682047341</span>
+</span><span class="line"><span class="c1">; current guess is: 4.541382480151454</span>
+</span><span class="line"><span class="c1">; current guess is: 4.564903245230833</span>
+</span><span class="line"><span class="c1">; current guess is: 4.549372679303342</span>
+</span><span class="line"><span class="c1">; current guess is: 4.559606491913287</span>
+</span><span class="line"><span class="c1">; current guess is: 4.552853875788271</span>
+</span><span class="line"><span class="c1">; current guess is: 4.557305529748263</span>
+</span><span class="line"><span class="c1">; current guess is: 4.554369064436181</span>
+</span><span class="line"><span class="c1">; current guess is: 4.556305311532999</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555028263573554</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555870396702851</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555315001192079</span>
+</span><span class="line"><span class="c1">; current guess is: 4.5556812635433275</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555439715736846</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555599009998291</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555493957531389</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555563237292884</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555517548417651</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555547679306398</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555527808516254</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555540912917957</span>
+</span><span class="line"><span class="c1">; 4.555532270803653</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; with average damping</span>
+</span><span class="line"><span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">log </span><span class="mi">1000</span><span class="p">)</span> <span class="p">(</span><span class="nb">log </span><span class="nv">x</span><span class="p">)))</span> <span class="mi">2</span><span class="p">))</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; output below:</span>
+</span><span class="line"><span class="c1">; current guess is: 2.0</span>
+</span><span class="line"><span class="c1">; current guess is: 5.9828921423310435</span>
+</span><span class="line"><span class="c1">; current guess is: 4.922168721308343</span>
+</span><span class="line"><span class="c1">; current guess is: 4.628224318195455</span>
+</span><span class="line"><span class="c1">; current guess is: 4.568346513136242</span>
+</span><span class="line"><span class="c1">; current guess is: 4.5577305909237005</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555909809045131</span>
+</span><span class="line"><span class="c1">; current guess is: 4.555599411610624</span>
+</span><span class="line"><span class="c1">; current guess is: 4.5555465521473675</span>
+</span><span class="line"><span class="c1">; 4.555537551999825</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.37</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="c1">; k-term finite continued fraction</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cont-frac</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">frac</span> <span class="nv">i</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">i</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">))</span>
+</span><span class="line">      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nf">frac</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">i</span> <span class="mi">1</span><span class="p">))))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">frac</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">i</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="line">      <span class="nv">result</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">result</span><span class="p">)))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">k</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; k = 10 produce 0.6179775280898876</span>
+</span><span class="line"><span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">           <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">           <span class="mi">10</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">                <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">                <span class="mi">10</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; k = 11 produce 0.6180555555555556</span>
+</span><span class="line"><span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">           <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">           <span class="mi">11</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">                <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">                <span class="mi">11</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; TODO: implement a procedure to retry different k until the first</span>
+</span><span class="line"><span class="c1">; one that produce the value accurate to 4 decimal.</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.38</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cont-frac</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">i</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="line">      <span class="nv">result</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">result</span><span class="p">)))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">k</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; if    i % 3 == 2, (d i) = 2 * ((i + 1) / 3)</span>
+</span><span class="line"><span class="c1">; else  (d i) = 1</span>
+</span><span class="line"><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span class="line">              <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">r</span> <span class="p">(</span><span class="nb">remainder </span><span class="nv">i</span> <span class="mi">3</span><span class="p">)))</span>
+</span><span class="line">                            <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">r</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class="line">                              <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+</span><span class="line">                              <span class="mf">1.0</span><span class="p">)))</span>
+</span><span class="line">              <span class="mi">10</span><span class="p">)</span>
+</span><span class="line">   <span class="mi">2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.39</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="c1">; if i = 1, (n i) = -x else (n i) = -x^2</span>
+</span><span class="line"><span class="c1">; (d i) = 2 * i - 1</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">tan-cf</span> <span class="nv">x</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">i</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">                           <span class="nv">x</span>
+</span><span class="line">                           <span class="p">(</span><span class="nb">- </span><span class="mi">0</span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">             <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">i</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">             <span class="nv">k</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cont-frac</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iter</span> <span class="nv">i</span> <span class="nv">result</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class="line">      <span class="nv">result</span>
+</span><span class="line">      <span class="p">(</span><span class="nf">iter</span> <span class="p">(</span><span class="nb">- </span><span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">result</span><span class="p">)))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">iter</span> <span class="nv">k</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="c1">; tan (pi / 8)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">tan-cf</span> <span class="mf">0.4</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; tan (pi / 4)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">tan-cf</span> <span class="mf">0.7853981633974483</span> <span class="mi">10</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.40</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">average-damp</span> <span class="nv">f</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">average</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">average</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">tolerance</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">guess</span><span class="p">)))</span>
+</span><span class="line">      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">close-enough</span> <span class="nv">next</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">next</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">try</span> <span class="nv">next</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">try</span> <span class="nv">first-guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; re-write the square-root procedure</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">sqrt </span><span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="nf">average-damp</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)))</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; cube root, similar with above</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cube-root</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="nf">average-damp</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">y</span><span class="p">))))</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">dx</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">deriv</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nf">g</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">dx</span><span class="p">))</span> <span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">))</span> <span class="nv">dx</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cube</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">newton-transform</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">)</span> <span class="p">((</span><span class="nf">deriv</span> <span class="nv">g</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">newton-method</span> <span class="nv">g</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="nf">newton-transform</span> <span class="nv">g</span><span class="p">)</span> <span class="nv">guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cubic</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">a</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">b</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">c</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; zero of x^3 + x^2 + x + 1</span>
+</span><span class="line"><span class="c1">; should be -1</span>
+</span><span class="line"><span class="p">(</span><span class="nf">newton-method</span> <span class="p">(</span><span class="nf">cubic</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.41</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="c1">;; Note: it&#39;s a little confusing at first, &#39;double&#39; is not apply the function</span>
+</span><span class="line"><span class="c1">;; &#39;f&#39; and double the result, it&#39;s &#39;DOUBLE&#39; the application of the function</span>
+</span><span class="line"><span class="c1">;; &#39;f&#39;.</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">double</span> <span class="nv">f</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">inc</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">((</span><span class="nf">double</span> <span class="nv">inc</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line"><span class="p">(((</span><span class="nf">double</span> <span class="nv">double</span><span class="p">)</span> <span class="nv">inc</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">; this will get 21</span>
+</span><span class="line"><span class="p">(((</span><span class="nf">double</span> <span class="p">(</span><span class="nf">double</span> <span class="nv">double</span><span class="p">))</span> <span class="nv">inc</span><span class="p">)</span> <span class="mi">5</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.42</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">inc</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">((</span><span class="nf">compose</span> <span class="nv">square</span> <span class="nv">inc</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.43</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">f</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">inc</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">((</span><span class="nf">repeated</span> <span class="nv">square</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">5</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.44</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">n-fold-smooth</span> <span class="nv">f</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">repeated</span> <span class="p">(</span><span class="nf">smooth</span> <span class="nv">f</span><span class="p">)</span> <span class="nv">n</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">smooth</span> <span class="nv">f</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">dx</span> <span class="mf">0.0001</span><span class="p">))</span>
+</span><span class="line">    <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span>
+</span><span class="line">      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="nv">dx</span><span class="p">))</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">dx</span><span class="p">)))</span> <span class="mi">3</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">f</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">((</span><span class="nf">n-fold-smooth</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">((</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">6</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.45</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">tolerance</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">;; from the experiments, the nth root requires at least log2(n) average damps</span>
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">nth-root</span> <span class="nv">x</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">fixed-point</span>
+</span><span class="line">    <span class="p">((</span><span class="nf">repeated</span> <span class="nv">average-damp</span> <span class="p">(</span><span class="nb">floor </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">log </span><span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nb">log </span><span class="mi">2</span><span class="p">))))</span>
+</span><span class="line">    <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="p">(</span><span class="nb">expt </span><span class="nv">y</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class="line">    <span class="mf">1.0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">close-enough?</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">guess</span><span class="p">)))</span>
+</span><span class="line">      <span class="c1">; (display next)</span>
+</span><span class="line">      <span class="c1">; (newline)</span>
+</span><span class="line">      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">close-enough?</span> <span class="nv">next</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">next</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">try</span> <span class="nv">next</span><span class="p">))))</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">try</span> <span class="nv">first-guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">average-damp</span> <span class="nv">f</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">average</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">average</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">= </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">f</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="p">(</span><span class="nf">repeated</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">- </span><span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">compose</span> <span class="nv">f</span> <span class="nv">g</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">f</span> <span class="p">(</span><span class="nf">g</span> <span class="nv">x</span><span class="p">))))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">16</span> <span class="mi">4</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">32</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">64</span> <span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">128</span> <span class="mi">7</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">256</span> <span class="mi">8</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nf">nth-root</span> <span class="mi">10000000000000000000000000000000000000000000000000000000000000000</span> <span class="mi">64</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.46</strong>
+Answer:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="nv">tolerance</span> <span class="mf">0.00001</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">iterative-improve</span> <span class="nv">enough?</span> <span class="nv">improve</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+</span><span class="line">    <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">next-guess</span> <span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span><span class="p">)))</span>
+</span><span class="line">      <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">enough?</span> <span class="nv">guess</span> <span class="nv">next-guess</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">guess</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">try</span> <span class="nv">next-guess</span><span class="p">))))</span>
+</span><span class="line">  <span class="nv">try</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+</span><span class="line">  <span class="p">((</span><span class="nf">iterative-improve</span> <span class="nv">close-enough?</span> <span class="nv">f</span><span class="p">)</span> <span class="nv">first-guess</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">sqrt </span><span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">((</span><span class="nf">iterative-improve</span>
+</span><span class="line">      <span class="nv">close-enough?</span>
+</span><span class="line">      <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">y</span><span class="p">)</span> <span class="p">(</span><span class="nf">average</span> <span class="nv">y</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="nv">y</span><span class="p">))))</span>
+</span><span class="line">      <span class="mf">1.0</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">average</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">close-enough?</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">- </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nb">sqrt </span><span class="mi">4</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nb">sqrt </span><span class="mi">6</span><span class="p">)</span>
+</span><span class="line"><span class="p">(</span><span class="nb">sqrt </span><span class="mi">9</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">cos</span> <span class="mf">1.0</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></div></div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1706,67 +2845,9 @@ and <a class="reference external" href="http://mrzhang.me/blog/blog-equals-githu
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/25/hello-octopress/">Hello Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-25T02:31:00+08:00" pubdate data-updated="true">Jul 25<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is the first post, using Octopress to set up a tech blog on github is
-so cool!</p>
-
-<h2 id="to-do">TO DO:</h2>
-<hr />
-
-<ul>
-  <li>Add a ‘about’ page serving as the self introduction</li>
-  <li>Enable visitors to post comments</li>
-  <li>Add useful plugins</li>
-  <li>Prepare the post to summarise the process of setting all this things up</li>
-</ul>
-
-<h2 id="update-on-2012-07-27">Update on 2012-07-27:</h2>
-<hr />
-
-<p>So far, I have finished the basic settings of this blog. The changes include:</p>
-
-<ul>
-  <li>Change the default layout and fonts to my preference</li>
-  <li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
-  <li>Enable comment</li>
-  <li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1780,13 +2861,17 @@ so cool!</p>
     <li class='category'><a href='/blog/categories/coursera/'>Coursera (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (3)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
-<li class='category'><a href='/blog/categories/sicp/'>SICP (2)</a></li>
+<li class='category'><a href='/blog/categories/sicp/'>SICP (3)</a></li>
 
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/14/sicp-section-1-2/">SICP Section 1.2</a>
@@ -1802,10 +2887,6 @@ so cool!</p>
     
       <li class="post">
         <a href="/blog/2012/08/21/python-abc/">Python abc</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/19/python-bisect/">Python bisect</a>
       </li>
     
   </ul>
@@ -1829,12 +2910,12 @@ so cool!</p>
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-    <a style="font-size: 150%" href="/blog/tags/chapter-1/">Chapter 1</a>
+    <a style="font-size: 185%" href="/blog/tags/chapter-1/">Chapter 1</a>
 <a style="font-size: 90%" href="/blog/tags/fp/">FP</a>
-<a style="font-size: 185%" href="/blog/tags/sicp/">SICP</a>
+<a style="font-size: 210%" href="/blog/tags/sicp/">SICP</a>
 <a style="font-size: 90%" href="/blog/tags/scala/">Scala</a>
 <a style="font-size: 90%" href="/blog/tags/section-1-1/">Section 1.1</a>
-<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/abc/">abc</a>
 <a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
 <a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
 <a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
