@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: kramdown | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/kramdown/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/kramdown/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/18/supporting-latex-in-octopress/"/>
     <updated>2012-08-18T00:57:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress</id>
+    <id>http://chuchao333.github.io/blog/2012/08/18/supporting-latex-in-octopress</id>
     <content type="html"><![CDATA[<p>It took me some time to finally get latex math formulas working in Octopress.
 If you googled &lsquo;Octopress latex&rsquo;, you can get quite a few online resources about
 how to support latex in octopress, with various levels of complexity. In this

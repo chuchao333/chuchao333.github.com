@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: sicp | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/categories/sicp/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/categories/sicp/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.3]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3/"/>
+    <link href="http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3/"/>
     <updated>2013-06-27T01:06:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3</id>
+    <id>http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3</id>
     <content type="html"><![CDATA[<p>Procedures as Arguments
 ~~~~~~~~~~~~~~~~~~~~~~~</p>
 
@@ -722,9 +722,9 @@ Answer:</p>
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.2]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2/"/>
+    <link href="http://chuchao333.github.io/blog/2013/06/14/sicp-section-1-2/"/>
     <updated>2013-06-14T00:54:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2</id>
+    <id>http://chuchao333.github.io/blog/2013/06/14/sicp-section-1-2</id>
     <content type="html"><![CDATA[<p>Recursive Process V.S. Iterative Process
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
 
@@ -1072,9 +1072,9 @@ exponentially, which conclues that T(n) = O(2<sup>n</sup> * logn) = O(n)</p>
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.1]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
+    <link href="http://chuchao333.github.io/blog/2013/05/14/sicp-section-1-1/"/>
     <updated>2013-05-14T00:39:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
+    <id>http://chuchao333.github.io/blog/2013/05/14/sicp-section-1-1</id>
     <content type="html"><![CDATA[<p>.. highlights::</p>
 
 <pre><code>Computational processes are abstract beings that inhabit computers. As they

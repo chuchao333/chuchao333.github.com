@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: python | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/python/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/python/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Python abc]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/21/python-abc/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/21/python-abc/"/>
     <updated>2012-08-21T21:06:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/21/python-abc</id>
+    <id>http://chuchao333.github.io/blog/2012/08/21/python-abc</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
 <p>This module provides the infrastructure for defining
@@ -155,9 +155,9 @@ typical usages in the <strong>collections</strong> module.</p>
   
   <entry>
     <title type="html"><![CDATA[Python bisect]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/19/python-bisect/"/>
     <updated>2012-08-19T20:01:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <id>http://chuchao333.github.io/blog/2012/08/19/python-bisect</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
 <p>This module provides support for maintaining a list in sorted order without
@@ -321,9 +321,9 @@ for more details.</p>
   
   <entry>
     <title type="html"><![CDATA[Python heapq]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/14/python-heapq/"/>
     <updated>2012-08-14T22:26:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/14/python-heapq</id>
+    <id>http://chuchao333.github.io/blog/2012/08/14/python-heapq</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
 <p>The module provides an implementation of heap queue algorithm, also known as
@@ -403,9 +403,9 @@ the comparisons on the following operations on the heap.</p>
   
   <entry>
     <title type="html"><![CDATA[Introduction on reading source of python standard libraries series]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
     <updated>2012-08-14T21:11:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
+    <id>http://chuchao333.github.io/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
     <content type="html"><![CDATA[<p>I am going to start the series of posts on reading the source of python standard
 modules. I will go with the pure python modules first, and maybe later I can
 continue with C implementations of the modules. Let&rsquo;s see how far I could go.</p>

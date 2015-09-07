@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,22 +15,26 @@
   
   <entry>
     <title type="html"><![CDATA[Scala Cake Pattern]]></title>
-    <link href="http://chuchao333.github.com/blog/2015/09/07/scala-cake-pattern/"/>
+    <link href="http://chuchao333.github.io/blog/2015/09/07/scala-cake-pattern/"/>
     <updated>2015-09-07T18:39:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2015/09/07/scala-cake-pattern</id>
-    <content type="html"><![CDATA[<p><a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/</a></p>
+    <id>http://chuchao333.github.io/blog/2015/09/07/scala-cake-pattern</id>
+    <content type="html"><![CDATA[<p>The summary of my thoughts on the Scala Cake Pattern.</p>
+<div class="section" id="references">
+<h2>References</h2>
+<p><a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/</a></p>
 <p><a class="reference external" href="http://www.warski.org/blog/2010/12/di-in-scala-cake-pattern/">http://www.warski.org/blog/2010/12/di-in-scala-cake-pattern/</a></p>
 <p><a class="reference external" href="http://scalatutorials.com/code/2013/07/09/scala-cake-pattern/">http://scalatutorials.com/code/2013/07/09/scala-cake-pattern/</a></p>
 <p><a class="reference external" href="https://groups.google.com/forum/#!msg/scala-user/DC2vUuCZmI0/RO3JYoKnj20Jcstdi">https://groups.google.com/forum/#!msg/scala-user/DC2vUuCZmI0/RO3JYoKnj20Jcstdi</a></p>
 <p><a class="reference external" href="https://www.reddit.com/r/haskell/comments/1629ld/olegs_go_at_reproducing_scalas_cake_pattern/">https://www.reddit.com/r/haskell/comments/1629ld/olegs_go_at_reproducing_scalas_cake_pattern/</a></p>
-<p><a class="reference external" href="http://blog.originate.com/blog/2013/10/21/reader-monad-for-dependency-injection/">http://blog.originate.com/blog/2013/10/21/reader-monad-for-dependency-injection/</a></p>]]></content>
+<p><a class="reference external" href="http://blog.originate.com/blog/2013/10/21/reader-monad-for-dependency-injection/">http://blog.originate.com/blog/2013/10/21/reader-monad-for-dependency-injection/</a></p>
+</div>]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.3]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3/"/>
+    <link href="http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3/"/>
     <updated>2013-06-27T01:06:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3</id>
+    <id>http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3</id>
     <content type="html"><![CDATA[<div class="section" id="procedures-as-arguments">
 <h2>Procedures as Arguments</h2>
 <p>Why 'high order procedures' is useful?</p>
@@ -1141,9 +1145,9 @@ Answer:</p>
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.2]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2/"/>
+    <link href="http://chuchao333.github.io/blog/2013/06/14/sicp-section-1-2/"/>
     <updated>2013-06-14T00:54:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2</id>
+    <id>http://chuchao333.github.io/blog/2013/06/14/sicp-section-1-2</id>
     <content type="html"><![CDATA[<div class="section" id="recursive-process-v-s-iterative-process">
 <h2>Recursive Process V.S. Iterative Process</h2>
 <ul>
@@ -1576,9 +1580,9 @@ exponentially, which conclues that T(n) = O(2^n * logn) = O(n)</p>
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.1]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
+    <link href="http://chuchao333.github.io/blog/2013/05/14/sicp-section-1-1/"/>
     <updated>2013-05-14T00:39:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
+    <id>http://chuchao333.github.io/blog/2013/05/14/sicp-section-1-1</id>
     <content type="html"><![CDATA[<blockquote class="highlights">
 Computational processes are abstract beings that inhabit computers. As they
 evolve, processes manipulate other abstract things called data. The evolution
@@ -1735,16 +1739,16 @@ below updated good-enough? procedure:</p>
   
   <entry>
     <title type="html"><![CDATA[Coursera online functional programming course - a retrospective]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/"/>
+    <link href="http://chuchao333.github.io/blog/2013/01/06/coursera-online-functional-programming-course-review/"/>
     <updated>2013-01-06T15:52:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review</id>
+    <id>http://chuchao333.github.io/blog/2013/01/06/coursera-online-functional-programming-course-review</id>
     <content type="html"><![CDATA[<p>Here comes the summary of the Coursera course
 <a class="reference external" href="https://class.coursera.org/progfun-2012-001/class/index">Fucntional Programming Principles in Scala</a>
 It's a little bit late, it has been two months since I finished the course.
 This is the first Coursera course I followed from the very beginning to the end
 and accomplished all the programming assignments with full scores, which helped
 me to get the certificate with distinction.</p>
-<img alt="/images/posts/coursera_scala_certificate.jpg" src="http://chuchao333.github.com/images/posts/coursera_scala_certificate.jpg" />
+<img alt="/images/posts/coursera_scala_certificate.jpg" src="http://chuchao333.github.io/images/posts/coursera_scala_certificate.jpg" />
 <p>First the excellent parts of the course:</p>
 <ul class="simple">
 <li>Martin Odersky is a pretty good teacher, and all the lectures are well
@@ -1787,9 +1791,9 @@ and assignments to this blog later.</p>
   
   <entry>
     <title type="html"><![CDATA[Python abc]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/21/python-abc/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/21/python-abc/"/>
     <updated>2012-08-21T21:06:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/21/python-abc</id>
+    <id>http://chuchao333.github.io/blog/2012/08/21/python-abc</id>
     <content type="html"><![CDATA[<div class="section" id="introduction">
 <h2>Introduction</h2>
 <p>This module provides the infrastructure for defining
@@ -1969,9 +1973,9 @@ typical usages in the <strong>collections</strong> module.</p>
   
   <entry>
     <title type="html"><![CDATA[Python bisect]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/19/python-bisect/"/>
     <updated>2012-08-19T20:01:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <id>http://chuchao333.github.io/blog/2012/08/19/python-bisect</id>
     <content type="html"><![CDATA[<div class="section" id="introduction">
 <h2>Introduction</h2>
 <p>This module provides support for maintaining a list in sorted order without
@@ -2160,9 +2164,9 @@ for more details.</p>
   
   <entry>
     <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/18/supporting-latex-in-octopress/"/>
     <updated>2012-08-18T00:57:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress</id>
+    <id>http://chuchao333.github.io/blog/2012/08/18/supporting-latex-in-octopress</id>
     <content type="html"><![CDATA[<p>It took me some time to finally get latex math formulas working in Octopress.
 If you googled &lsquo;Octopress latex&rsquo;, you can get quite a few online resources about
 how to support latex in octopress, with various levels of complexity. In this
@@ -2366,9 +2370,9 @@ $\exp(-\frac{x<sup>2</sup>}{2})$.</p>
   
   <entry>
     <title type="html"><![CDATA[Python heapq]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/14/python-heapq/"/>
     <updated>2012-08-14T22:26:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/14/python-heapq</id>
+    <id>http://chuchao333.github.io/blog/2012/08/14/python-heapq</id>
     <content type="html"><![CDATA[<div class="section" id="introduction">
 <h2>Introduction</h2>
 <p>The module provides an implementation of heap queue algorithm, also known as
@@ -2455,9 +2459,9 @@ the comparisons on the following operations on the heap.</p>
   
   <entry>
     <title type="html"><![CDATA[Introduction on reading source of python standard libraries series]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
     <updated>2012-08-14T21:11:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
+    <id>http://chuchao333.github.io/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
     <content type="html"><![CDATA[<p>I am going to start the series of posts on reading the source of python standard
 modules. I will go with the pure python modules first, and maybe later I can
 continue with C implementations of the modules. Let's see how far I could go.</p>
@@ -2490,9 +2494,9 @@ the typical use cases. This is inspired by the blogs about
   
   <entry>
     <title type="html"><![CDATA[Octopress and Github]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/"/>
+    <link href="http://chuchao333.github.io/blog/2012/07/25/octopress-and-github/"/>
     <updated>2012-07-25T23:21:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
+    <id>http://chuchao333.github.io/blog/2012/07/25/octopress-and-github</id>
     <content type="html"><![CDATA[<p>This post documents how I set up this blog and the problems encounted. Octopress
 is quite popular recently and you can just find a huge number of bloggers who
 have written about how to set this up online. My main references are
@@ -2539,9 +2543,9 @@ default post ext in _confg.yml to rst. Code block in rst is quite handy to type.
   
   <entry>
     <title type="html"><![CDATA[Hello Octopress]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/07/25/hello-octopress/"/>
+    <link href="http://chuchao333.github.io/blog/2012/07/25/hello-octopress/"/>
     <updated>2012-07-25T02:31:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/07/25/hello-octopress</id>
+    <id>http://chuchao333.github.io/blog/2012/07/25/hello-octopress</id>
     <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
 so cool!</p>
 

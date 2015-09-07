@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: coursera | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/categories/coursera/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/categories/coursera/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Coursera online functional programming course - a retrospective]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/"/>
+    <link href="http://chuchao333.github.io/blog/2013/01/06/coursera-online-functional-programming-course-review/"/>
     <updated>2013-01-06T15:52:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review</id>
+    <id>http://chuchao333.github.io/blog/2013/01/06/coursera-online-functional-programming-course-review</id>
     <content type="html"><![CDATA[<p>Here comes the summary of the Coursera course
 <code>Fucntional Programming Principles in Scala &lt;https://class.coursera.org/progfun-2012-001/class/index&gt;</code>_
 It&rsquo;s a little bit late, it has been two months since I finished the course.

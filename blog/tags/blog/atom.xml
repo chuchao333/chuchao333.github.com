@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: blog | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/blog/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/blog/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Hello Octopress]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/07/25/hello-octopress/"/>
+    <link href="http://chuchao333.github.io/blog/2012/07/25/hello-octopress/"/>
     <updated>2012-07-25T02:31:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/07/25/hello-octopress</id>
+    <id>http://chuchao333.github.io/blog/2012/07/25/hello-octopress</id>
     <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
 so cool!</p>
 

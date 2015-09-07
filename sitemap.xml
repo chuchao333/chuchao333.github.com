@@ -1,156 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://chuchao333.github.com/blog/2015/09/07/scala-cake-pattern/</loc>
+    <loc>http://chuchao333.github.io/blog/2015/09/07/scala-cake-pattern/</loc>
     <lastmod>2015-09-07T18:39:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3/</loc>
+    <loc>http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3/</loc>
     <lastmod>2013-06-27T01:06:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2/</loc>
+    <loc>http://chuchao333.github.io/blog/2013/06/14/sicp-section-1-2/</loc>
     <lastmod>2013-06-14T00:54:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/</loc>
+    <loc>http://chuchao333.github.io/blog/2013/05/14/sicp-section-1-1/</loc>
     <lastmod>2013-05-14T00:39:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/</loc>
+    <loc>http://chuchao333.github.io/blog/2013/01/06/coursera-online-functional-programming-course-review/</loc>
     <lastmod>2013-01-06T15:52:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/08/21/python-abc/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/08/21/python-abc/</loc>
     <lastmod>2012-08-21T21:06:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/08/19/python-bisect/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/08/19/python-bisect/</loc>
     <lastmod>2012-08-19T20:01:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/08/18/supporting-latex-in-octopress/</loc>
     <lastmod>2012-08-18T00:57:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/08/14/python-heapq/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/08/14/python-heapq/</loc>
     <lastmod>2012-08-14T22:26:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/</loc>
     <lastmod>2012-08-14T21:11:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/07/25/octopress-and-github/</loc>
     <lastmod>2012-07-25T23:21:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/2012/07/25/hello-octopress/</loc>
+    <loc>http://chuchao333.github.io/blog/2012/07/25/hello-octopress/</loc>
     <lastmod>2012-07-25T02:31:00+08:00</lastmod>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/archives/</loc>
+    <loc>http://chuchao333.github.io/blog/archives/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/</loc>
+    <loc>http://chuchao333.github.io/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/about/</loc>
+    <loc>http://chuchao333.github.io/about/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/notes/</loc>
+    <loc>http://chuchao333.github.io/notes/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/notes/sicp.html</loc>
+    <loc>http://chuchao333.github.io/notes/sicp.html</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/categories/octopress/</loc>
+    <loc>http://chuchao333.github.io/blog/categories/octopress/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/categories/python/</loc>
+    <loc>http://chuchao333.github.io/blog/categories/python/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/categories/coursera/</loc>
+    <loc>http://chuchao333.github.io/blog/categories/coursera/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/categories/sicp/</loc>
+    <loc>http://chuchao333.github.io/blog/categories/sicp/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/categories/scala/</loc>
+    <loc>http://chuchao333.github.io/blog/categories/scala/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/octopress/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/octopress/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/blog/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/blog/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/github/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/github/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/python/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/python/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/heap/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/heap/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/priority-queue/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/priority-queue/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/latex/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/latex/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/kramdown/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/kramdown/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/mathjax/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/mathjax/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/bisect/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/bisect/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/binary-search/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/binary-search/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/abc/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/abc/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/abcmeta/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/abcmeta/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/metaclass/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/metaclass/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/coursera/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/coursera/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/scala/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/scala/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/fp/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/fp/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/sicp/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/sicp/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/chapter-1/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/chapter-1/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/section-1-1/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/section-1-1/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/section-1-2/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/section-1-2/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/section-1-3/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/section-1-3/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/cake-pattern/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/cake-pattern/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/blog/tags/self-type/</loc>
+    <loc>http://chuchao333.github.io/blog/tags/self-type/</loc>
   </url>
   <url>
-    <loc>http://chuchao333.github.com/posts/2/</loc>
+    <loc>http://chuchao333.github.io/posts/2/</loc>
   </url>
 </urlset>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: Self-type | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/self-type/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/self-type/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,11 +15,12 @@
   
   <entry>
     <title type="html"><![CDATA[Scala Cake Pattern]]></title>
-    <link href="http://chuchao333.github.com/blog/2015/09/07/scala-cake-pattern/"/>
+    <link href="http://chuchao333.github.io/blog/2015/09/07/scala-cake-pattern/"/>
     <updated>2015-09-07T18:39:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2015/09/07/scala-cake-pattern</id>
-    <content type="html"><![CDATA[<p>References
-~~~~~~~~~~</p>
+    <id>http://chuchao333.github.io/blog/2015/09/07/scala-cake-pattern</id>
+    <content type="html"><![CDATA[<p>The summary of my thoughts on the Scala Cake Pattern.</p>
+
+<h2>References</h2>
 
 <p><a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/</a></p>
 

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: Section 1.3 | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/section-1-3/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/section-1-3/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SICP Section 1.3]]></title>
-    <link href="http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3/"/>
+    <link href="http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3/"/>
     <updated>2013-06-27T01:06:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3</id>
+    <id>http://chuchao333.github.io/blog/2013/06/27/sicp-section-1-3</id>
     <content type="html"><![CDATA[<p>Procedures as Arguments
 ~~~~~~~~~~~~~~~~~~~~~~~</p>
 

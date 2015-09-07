@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: bisect | Chao's Random Thoughts]]></title>
-  <link href="http://chuchao333.github.com/blog/tags/bisect/atom.xml" rel="self"/>
-  <link href="http://chuchao333.github.com/"/>
-  <updated>2015-09-07T19:35:50+08:00</updated>
-  <id>http://chuchao333.github.com/</id>
+  <link href="http://chuchao333.github.io/blog/tags/bisect/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.io/"/>
+  <updated>2015-09-07T20:01:42+08:00</updated>
+  <id>http://chuchao333.github.io/</id>
   <author>
     <name><![CDATA[Chao Chu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Python bisect]]></title>
-    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <link href="http://chuchao333.github.io/blog/2012/08/19/python-bisect/"/>
     <updated>2012-08-19T20:01:00+08:00</updated>
-    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <id>http://chuchao333.github.io/blog/2012/08/19/python-bisect</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
 <p>This module provides support for maintaining a list in sorted order without
