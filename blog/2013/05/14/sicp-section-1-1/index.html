@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SICP Section 1.1 - Chao's Random Thoughts</title>
+  <meta name="author" content="Chao Chu">
+
+  
+  <meta name="description" content="Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The &hellip;">
+  <meta name="keywords" content="SICP">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Chao's Random Thoughts" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chao's Random Thoughts</a></h1>
+  
+    <h2>Keep looking, don't settle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:chuchao333.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/notes">Notes</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">SICP Section 1.1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-14T00:39:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote class="highlights">
+Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The evolution
+of a process is directed by pattern of rules called a program.</blockquote>
+<p>Why use Lisp for the book?</p>
+<blockquote class="highlights">
+The most significant unique feature of Lisp is the fact that Lisp descriptions
+of processes, called procedures, can themselves be represented and manipulated
+as Lisp data. The importance of this is that there are powerful program-design
+techniques that rely on the ability to blur the traditional distinction between
+&quot;passive&quot; data and &quot;active&quot; processes.</blockquote>
+<p>The three mechanisms of combining simple ideas to form more complex ideas in any
+powerful programming languages:</p>
+<ol class="arabic simple">
+<li>primitive expressions</li>
+<li>means of combination</li>
+<li>means of abstraction</li>
+</ol>
+<div class="section" id="substitution-model">
+<h2>Substitution model</h2>
+<ul>
+<li><p class="first">Applicative order</p>
+<p>Evaluate the operator and operands first and then applies the resulting procedure
+to the resulting arguments. &quot;Fully expand and then reduce&quot;</p>
+</li>
+<li><p class="first">Normal order</p>
+<p>Don't evaluate the operands until their values are needed, instead, substitute
+operand expressions for parameters until it obtained an expression involving only
+primitive operators, and would then perform the evaluation. &quot;Evaluate the
+arguments and then apply&quot;</p>
+</li>
+</ul>
+</div>
+<div class="section" id="example-square-roots-by-newton-s-method">
+<h2>Example: Square Roots by Newton's Method</h2>
+<blockquote class="highlights">
+The contrast between function and procedure is a reflection of the general
+distinction between describing properties of things and describing how to
+do things, or, as it is sometimes refered to, the distinction between
+declarative knowledge and imperative knowledge. In mathematics we are
+usually concerned with declarative (what is) descriptions, whereas in
+computer science we are usually concerned with imperative (how to)
+descriptions.</blockquote>
+</div>
+<div class="section" id="exercises">
+<h2>Exercises</h2>
+<p><strong>1.3</strong> Define a procedure that takes three numbers as arguments and return the
+sum of squares of the two larger numbers.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum-of-squares</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">square</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">b</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">min </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">     <span class="nv">a</span>
+</span><span class="line">     <span class="nv">b</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nb">max </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">     <span class="nv">b</span>
+</span><span class="line">     <span class="nv">a</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">sum-of-squares-of-2-largest</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">sum-of-squares</span> <span class="p">(</span><span class="nb">max </span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="p">(</span><span class="nb">max </span><span class="nv">c</span> <span class="p">(</span><span class="nb">min </span><span class="nv">a</span> <span class="nv">b</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.4</strong> Observe that our model of evaluation allows for combinations whose
+operators are compound expressions. Use this observation to describe the
+behavior of the following procedure:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">a-plus-abs-b</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+</span><span class="line">  <span class="p">((</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">b</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">+</span> <span class="nv">-</span><span class="p">)</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure><p>if b is greater than 0, the operator that will apply to a and b is +, or else
+it will be -, so the a-plus-abs-b will always result in a plus abs of b.</p>
+<p><strong>1.5</strong>
+Answer: the interpreter that uses applicative order evaluation will hang due
+to the infinite recursive call of 'p', while an interpreter that uses normal
+order evaluation will get 0.</p>
+<p><em>Note:</em> <strong>p</strong> is a function, <strong>(p)</strong> is a call to function p.</p>
+<p><strong>1.6</strong>
+Answer: the interpreter will hang due to the infinite recursive call to
+<em>sqrt-iter</em>. Since List uses applicative order evaluation, in the definition
+of new-if, the else-clause will always be evaluated no matter the result of
+the predicate, thus lead to infinite recursive call to sqrt-iter. That's why
+<strong>if</strong> needs to be a special form, the predicate expression is evaluated first,
+and the result determines whether to evaluate the consequent or the alternative
+expression.</p>
+<p><strong>1.7</strong>
+Answer: For small values, the absolute tolerance 0.001 is too large, so the
+results become inaccurate. For example, (sqrt 0.001) gives 0.04124542607499115
+on my machine. (ubuntu 12.10 x86_64); And for large values, due to the precision
+limitation of float-point representation, the guess couldn't be refined to a
+value that can be represented within the tolerance. In such cases, the program
+can endlessly alternate between two guesses that are more than 0.001 away from
+the true square root.</p>
+<p>so, instead of using absolute tolerance, we changed to use the relative
+tolerance of two continuous guess values. This can be demonstrated with the
+below updated good-enough? procedure:</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">good-enough?</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">guess</span><span class="p">))</span> <span class="mf">0.001</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure><p><strong>1.8</strong></p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="scheme"><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cbrt-iter</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">good-enough?</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">    <span class="nv">guess</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">cbrt-iter</span> <span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">/ </span><span class="nv">x</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">guess</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">guess</span><span class="p">))</span> <span class="mi">3</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">good-enough?</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">abs </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">guess</span><span class="p">))</span> <span class="mf">0.001</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">square</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">cbrt</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class="line">  <span class="p">(</span><span class="nf">cbrt-iter</span> <span class="mf">1.0</span> <span class="nv">x</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure><p>The only difference between cbrt and sqrt is the <strong>improve</strong> procedure.</p>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-14T00:39:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/sicp/'>sicp</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/06/coursera-online-functional-programming-course-review/" title="Previous Post: Coursera online functional programming course - a retrospective">&laquo; Coursera online functional programming course - a retrospective</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/06/14/sicp-section-1-2/" title="Next Post: SICP Section 1.2">SICP Section 1.2 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coursera/'>coursera (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (4)</a></li>
+<li class='category'><a href='/blog/categories/scala/'>scala (1)</a></li>
+<li class='category'><a href='/blog/categories/sicp/'>sicp (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/07/scala-cake-pattern/">Scala Cake Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/14/sicp-section-1-2/">SICP Section 1.2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/sicp-section-1-1/">SICP Section 1.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/coursera-online-functional-programming-course-review/">Coursera online functional programming course - a retrospective</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Recent Comments</h1>
+        <div id="dsq-recentcomments" class="dsq-widget">
+            <script type="text/javascript" src="http://disqus.com/forums/chaoc/recent_comments_widget.js?hide_avatars=1">
+            </script>
+        </div>
+</section>
+
+<section>
+    <h2>Reading List</h2>
+    <div>
+        <script type="text/javascript" src="http://www.douban.com/service/badge/3607474/?show=dolist&amp;n=6&amp;columns=3&amp;hidelogo=yes&amp;cat=book" >
+        </script>
+    </div>
+</section>
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+    <a style="font-size: 185%" href="/blog/tags/chapter-1/">Chapter 1</a>
+<a style="font-size: 210%" href="/blog/tags/sicp/">SICP</a>
+<a style="font-size: 150%" href="/blog/tags/scala/">Scala</a>
+<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/github/">github</a>
+<a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
+<a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
+<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Chao Chu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

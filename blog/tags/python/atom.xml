@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: python | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/python/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python abc]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/21/python-abc/"/>
+    <updated>2012-08-21T21:06:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/21/python-abc</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>This module provides the infrastructure for defining
+<code>abstract base classes &lt;http://docs.python.org/glossary.html#term-abstract-base-class&gt;</code><em>
+(ABCs) in Python. The ABCs define a minimal set of methods that establish the
+characteristic behavior of the type. For more details about this, see
+<code>PEP 3119 &lt;http://www.python.org/dev/peps/pep-3119/&gt;</code></em>.</p>
+
+<h2>Highlights</h2>
+
+<p>The module provides a <code>metaclass &lt;http://docs.python.org/glossary.html#term-metaclass&gt;</code>_
+used to create ABCs. An ABC can be subclassed directly. The class also has a &lsquo;register&rsquo;
+method to register unrelated concrete classes (including built-in classes) and unrelated
+ABCs as &lsquo;virtual subclasses&rsquo;</p>
+
+<p>Also there are two decorators <em>abstractmethod</em> and <em>abstractproperty</em>, which will set
+the function object&rsquo;s attribute &lsquo;<strong>isabstractmethod</strong>&rsquo; to True. Only when all of the
+abstract methods and abstract properties are overriden, can a class that has a metaclass
+derived from ABCMeta be instantiated.</p>
+
+<h2>Code comments</h2>
+
+<p>ABCMeta.<strong>new</strong>
+~~~~~~~~~~~~~~~
+.. code-block:: python</p>
+
+<pre><code>def __new__(mcls, name, bases, namespace):
+    cls = super(ABCMeta, mcls).__new__(mcls, name, bases, namespace)
+    # Compute set of abstract method names
+    abstracts = set(name
+                 for name, value in namespace.items()
+                 if getattr(value, "__isabstractmethod__", False))
+    for base in bases:
+        for name in getattr(base, "__abstractmethods__", set()):
+            value = getattr(cls, name, None)
+            if getattr(value, "__isabstractmethod__", False):
+                abstracts.add(name)
+    cls.__abstractmethods__ = frozenset(abstracts)
+
+    # chaoc: caches are the typical usages of weak references
+
+    # Set up inheritance registry
+    cls._abc_registry = WeakSet()
+    cls._abc_cache = WeakSet()
+    cls._abc_negative_cache = WeakSet()
+    cls._abc_negative_cache_version = ABCMeta._abc_invalidation_counter
+    return cls
+</code></pre>
+
+<ul>
+<li>It first creates a &lsquo;type&rsquo; object cls. (super(ABCMeta, mcls) is &lsquo;type&rsquo;)</li>
+<li>Iterate through all the attributes (including all the attributes inherited
+from all the bases), if any of them have &lsquo;<strong>isabstractmethod</strong>&rsquo; set to true,
+add it to cls&rsquo;s <strong>abstractmethods</strong>.</li>
+<li>Initialize the attributes &lsquo;<em>abc_registry&rsquo;, &lsquo;</em>abc_cache&rsquo;, &lsquo;<em>abc_negative_cache&rsquo;
+and &lsquo;</em>abc_negative_cache_version&rsquo;, which are used to speed up the check in
+<strong>instancecheck</strong> and <strong>subclasscheck</strong>.</li>
+</ul>
+
+
+<p>ABCMeta.register(cls, subclass)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def register(cls, subclass):
+    """Register a virtual subclass of an ABC."""
+    # chaoc: sanity check to make sure that subclass is class type
+    # either a type object (for new style classes) or the type is
+    # the same as ClassType(for old style classes)
+    if not isinstance(subclass, (type, types.ClassType)):
+        raise TypeError("Can only register classes")
+    if issubclass(subclass, cls):
+        return  # Already a subclass
+    # Subtle: test for cycles *after* testing for "already a subclass";
+    # this means we allow X.register(X) and interpret it as a no-op.
+    if issubclass(cls, subclass):
+        # This would create a cycle, which is bad for the algorithm below
+        raise RuntimeError("Refusing to create an inheritance cycle")
+    cls._abc_registry.add(subclass)
+    ABCMeta._abc_invalidation_counter += 1  # Invalidate negative cache
+</code></pre>
+
+<p>ABCMeta.<strong>instancecheck</strong>
+~~~~~~~~~~~~~~~~~~~~~~~~~
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def __instancecheck__(cls, instance):
+    """Override for isinstance(instance, cls)."""
+    # Inline the cache checking when it's simple.
+    subclass = getattr(instance, '__class__', None)
+    if subclass is not None and subclass in cls._abc_cache:
+        return True
+    subtype = type(instance)
+    # Old-style instances
+    if subtype is _InstanceType:
+        subtype = subclass
+    # chaoc: subtype will also be subclass for old style classes
+    # as assigned in the above step
+    if subtype is subclass or subclass is None:
+        # chaoc: check if the negative cache is safe to use or not
+        if (cls._abc_negative_cache_version ==
+            ABCMeta._abc_invalidation_counter and
+            subtype in cls._abc_negative_cache):
+            return False
+        # Fall back to the subclass check.
+        return cls.__subclasscheck__(subtype)
+    return (cls.__subclasscheck__(subclass) or
+            cls.__subclasscheck__(subtype))
+</code></pre>
+
+<p>ABCMeta.<strong>subclasscheck</strong>
+~~~~~~~~~~~~~~~~~~~~~~~~~
+The code and comment in this function is very clear and straightforward.</p>
+
+<p>Just make sure the different cases needed to check:</p>
+
+<ol>
+<li>check the subclass hook</li>
+<li>check if it&rsquo;s a direct subclass through <strong>mro</strong></li>
+<li>check if it&rsquo;s a subclass of a registered class (issubclass is called to do
+recursive check)</li>
+<li>check if it&rsquo;s a subclass of a subclass (issubclass is called to do recursive
+check)</li>
+</ol>
+
+
+<p>In this post, we only talk about the defitions of ABCMeta. We will see the
+typical usages in the <strong>collections</strong> module.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python bisect]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <updated>2012-08-19T20:01:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>This module provides support for maintaining a list in sorted order without
+having to sort the list after each insertion. It uses a basic bisection
+algorithm similar with the classic binary search.</p>
+
+<h2>Review of binary search</h2>
+
+<p>According to <code>'Programming Pearls'
+&lt;http://www.amazon.com/Programming-Pearls-2nd-Edition-Bentley/dp/0201657880/ref=sr_1_1?ie=UTF8&amp;qid=1345379618&amp;sr=8-1&amp;keywords=programming+pearls&gt;</code>_
+by Jon Bentley, It&rsquo;s very hard to write a correct binary search(Unbelievable, Uh?).
+Below is the note from the book:</p>
+
+<p>.. highlights::</p>
+
+<pre><code>I've assigned [binary search] in courses at Bell Labs and IBM.
+Professional programmers had a couple of hours to convert [its] description
+into a program in the language of their choice; a high-level pseudocode 
+was fine. At the end of the speci?ed time, almost all the programmers
+reported that they had correct code for the task. We would then take thirty
+minutes to examine their code, which the programmers did with test cases.
+In several classes and with over a hundred programmers, the results varied
+little: ninety percent of the programmers found bugs in their programs (and
+I wasn't always convinced of the correctness of the code in which no bugs were
+found). I was amazed: given ample time, only about ten percent of professional
+programmers were able to get this small program right. But they aren't the only
+ones to ?nd this task difficult: in the history in Section 6.2.1 of his
+'Sorting and Searching', Knuth points out that while the first binary search
+was published in 1946, the first published binary search without bugs did not
+appear until 1962.
+</code></pre>
+
+<p>Understanding how to use loop invariants in composing a program is very important,
+so let&rsquo;s first implement a binary search and prove the correctness utilizing this.
+Here we use a simplified specification compared to the bsearch function in the C
+standard library.</p>
+
+<p>.. code-block:: cpp</p>
+
+<pre><code>int binsearch(int x, int* A, int n)
+// @require 0 &lt;= n &amp;&amp; n &lt;= length(A)
+// @require is_sorted(A, n)
+/* @ensures (-1 == result &amp;&amp; !is_in(x, A, n))
+            || ((0 &lt;= result &amp;&amp; result &lt; n) &amp;&amp; A[result] == x)
+*/
+{
+    int lower = 0, higher = n;
+    int mid;
+
+    while (lower &lt; higher)
+    // @loop_invariant 0 &lt;= lower &amp;&amp; lower &lt;= higher &amp;&amp; higher &lt;= n
+    // @loop_invariant (lower == 0 || A[lower - 1] &lt; x)
+    // @loop_invariant (higher == n || A[higher] &gt; x)
+    {
+        mid = lower + (higher - lower) / 2;
+        // @assert lower &lt;= mid &amp;&amp; mid &lt; higher
+        if (A[mid] == x)
+            return mid;
+        else if (A[mid] &lt; x)
+            lower = mid + 1;
+        else
+            higher = mid;
+    }
+    return -1;
+}
+</code></pre>
+
+<p>It&rsquo;s easy to prove that the loop invariants are strong enough to imple the
+postcodition of the function(@ensures). Does this function terminate? In the
+loop body, we have lower &lt; higher, so lower &lt;= mid &amp;&amp; mid &lt; higher, then the
+intervals from <em>lower</em> to <em>mid</em> and from <em>(mid+1)</em> to <em>higher</em> are strictly
+smaller than the original interval (lower, higher), unless we find the element,
+the difference between higher and lower will eventually become 0 and we will
+exit the loop.</p>
+
+<p><strong>The bisect() functions provided in this module are useful for finding the
+insertion points but can be tricky or awkward to use for common searching
+tasks.</strong></p>
+
+<h2>Code comments</h2>
+
+<p>The above binsearch function will return the first of the elements that equals
+to the target if there are more than one. Sometimes it&rsquo;s required to find the
+left most one or the right most one. We can achieve this by using the bisect()
+functions. Let&rsquo;s examine the pre and post conditions, and also loop invariants.</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def bisect_right(a, x, lo=0, hi=None):
+
+    # Let l be the original lo passed in, and h be hi. In order to differentiate.
+
+    # @requires 0 &lt;= l &amp;&amp; l &lt; h &amp;&amp; h &lt;= len(a)
+    # @requires is_sorted(a[l:h])
+    # @ensures all e in a[l:result] have e &lt;= x, and all e in a[result:h] have e &gt; x
+
+    while lo &lt; hi:
+        # @loop_invariant l &lt;= lo &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= h
+        # @loop_invariant lo == l || a[lo - 1] &lt;= x
+        # @loop_invariant hi == h || a[hi] &gt; x
+        mid = (lo + hi) // 2
+        # @assert lower &lt;= mid &amp;&amp; mid &lt; higher
+        if x &lt; a[mid]:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+</code></pre>
+
+<p>After exiting the loop, we have lo == hi. Now we have to distinguish some cases:</p>
+
+<ul>
+<li>If lo == l, from the third conjunct, we know that a[hi] > x, and since lo == hi,
+we have a[lo] > x. In this case, all e in a[l:h] > x</li>
+<li>If hi == h, from the second conjunct, we know that a[lo - 1] &lt; x, in this case,
+all e in a[l:h] &lt;= x</li>
+<li>if lo != l and hi != h, from the second and third conjuncts, we know that
+a[lo - 1] &lt;= x, a[hi] > x. The post condition still holds.</li>
+</ul>
+
+
+<p>We can do the same analysis on the function bisect_left().</p>
+
+<p>Note: In the pre condition I explicitly written down that lo &lt; hi is required, the
+code will directly return lo when hi is less than or equal to lo, but that&rsquo;s simply
+meaningless, if this is the case, the sorted order of &lsquo;a&rsquo; after we insert element
+before the index returned by the function.</p>
+
+<p>About the function prototype
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In the doc of the module, it&rsquo;s <strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong>
+while in the source code, it&rsquo;s <strong>def bisect_left(a, x, lo=0, hi=None)</strong></p>
+
+<p><strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong> is not valid python code, you will
+get error like this: <strong>NameError: name &lsquo;a&rsquo; is not defined.</strong> This is because default
+values are computed and bound at the function definition time rather than when you
+call the function. This means that you can&rsquo;t have a default which is dependent on
+something that is not known until the function is called.</p>
+
+<h2>Pythonic stuff</h2>
+
+<p>Override function definitions in Python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code># Overwrite above definitions with a fast C implementation
+try:
+    from _bisect import *
+except ImportError:
+    pass
+</code></pre>
+
+<p>Gotcha &ndash; Mutable default arguments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>See <code>here &lt;http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument&gt;</code>_
+for more details.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python heapq]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/"/>
+    <updated>2012-08-14T22:26:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/14/python-heapq</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>The module provides an implementation of heap queue algorithm, also known as
+priority queue algorithm.</p>
+
+<h2>Highlights</h2>
+
+<ul>
+<li>Zero-based indexing is used, so the children&rsquo;s index of node with index k
+are (2<em>k + 1) and (2</em>k + 2) respectively.</li>
+<li>Internally a &lsquo;min heap&rsquo; is maintained rather than &lsquo;max heap&rsquo;, which is more
+generally used in algorithm textbooks.</li>
+<li>Three general functions based on heaps are also provided:</li>
+</ul>
+
+
+<p>.. code-block:: python</p>
+
+<pre><code># Merge multiple sorted inputs into a single sorted output
+# (for example, merge timestamped entries from multiple log files)
+heapq.merge(*iterables)
+
+# The following two functions are effectively like
+# sorted(iterable, key=key, reverse=True)[:n] and
+# sorted(iterable, key=key)[:n],
+# but they perform best with smaller values of n
+heapq.nlargest(n, iterable[, key])
+heapq.nsmallest(n, iterable[, key]))
+</code></pre>
+
+<h2>Pythonic stuff</h2>
+
+<p>Rich comparison methods
+~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def cmp_lt(x, y):
+    # use __lt__ if available; otherwise, try __le__
+    return x &lt; y if hasattr(x, '__lt__') else (not y &lt;= x)
+</code></pre>
+
+<p>In python, there are 6 so called &ldquo;Rich Comparison&rdquo; methods, x &lt; y calls
+x.<strong>lt</strong>(y) and others are similar (<strong>le</strong> and &lt;=; <strong>gt</strong> and >=; <strong>eq</strong> and ==;
+<strong>ne</strong> and &lt;>). Arguments to rich comparison  methods are never coerced. see
+<code>coercion &lt;http://docs.python.org/glossary.html#term-coercion&gt;</code>_</p>
+
+<h2>Code comments</h2>
+
+<p>Why heapify(x) is O(n)?
+~~~~~~~~~~~~~~~~~~~~~~~
+This is not obvious at first by seeing the code, given that there is a &lsquo;while&rsquo;
+loop in <em>siftup and also a while loop in </em>siftdown(called in _siftup). Let&rsquo;s
+look into it further:</p>
+
+<p>1) in the while loop of <em>siftup, it takes O(L) time for nodes that L levels
+   above leaves.
+2) and in the while loop of </em>siftdown called in <em>siftup, it takes at most L
+   steps, so </em>siftdown is O(L).
+3) since we have n/4 nodes in level 1, n/8 nodes in level 2, and finally one
+   root node, which is lg(n) levels above leaf, so the total amount in the while
+   loop of heapify is:</p>
+
+<p>| <strong>n/4 * c + n/8 * c + n/16 * 3c + &hellip; + 1 * lg(n) * c</strong>, and let n/4 = 2<sup>k</sup>,
+  after simplification, we get:
+| <strong>c * 2<sup>k</sup>(&frac12;<sup>0</sup> + 2/2<sup>1</sup> + 3/2<sup>2</sup> + &hellip; + (k+1)/2<sup>k</sup>)</strong>, as the limit of
+  <strong>(k+1)/2<sup>k</sup></strong> is 0 when k is infinite, so the term in the brackets bound to
+  a constant, from this we can conclude that heapify is O(2<sup>k</sup>), which is O(n).
+|</p>
+
+<p>Why it continues to find the smaller child until a leaf is hit in _siftup?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As explained in the comment by the module author, this is a ad hoc to reduce
+the comparisons on the following operations on the heap.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction on reading source of python standard libraries series]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/"/>
+    <updated>2012-08-14T21:11:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries</id>
+    <content type="html"><![CDATA[<p>I am going to start the series of posts on reading the source of python standard
+modules. I will go with the pure python modules first, and maybe later I can
+continue with C implementations of the modules. Let&rsquo;s see how far I could go.</p>
+
+<h2>What will be included</h2>
+
+<ul>
+<li>A brief introduction of the module. (It should be very short, people can go to
+the standard library doc for more information.)</li>
+<li>Special highlights about the important APIs, implementation details.</li>
+<li>Python features/idioms/tricks/gotchas that worth the whistle, especially those
+I was not familiar with</li>
+<li>Detail explanations about the tricky part of the code if any</li>
+</ul>
+
+
+<h2>What will not be included</h2>
+
+<ul>
+<li>The example usage of the various APIs, for this kind of stuff,
+<code>Python module of the week &lt;http://www.doughellmann.com/PyMOTW/&gt;</code>_ is a better
+place to go</li>
+</ul>
+
+
+<p>Also, alone the way, I may start another series on some specific &lsquo;advanced topics&rsquo;
+in python, like <strong>descriptor</strong>, <strong>decorator</strong>, <strong>method resolution order(mro)</strong>
+and so on. Mainly about why they are introduced into python, how they are used and
+the typical use cases. This is inspired by the blogs about
+<code>python history &lt;http://python-history.blogspot.com/&gt;</code>_</p>
+
+<p>This post will also be used to track my progress.</p>
+]]></content>
+  </entry>
+  
+</feed>

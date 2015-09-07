@@ -1,0 +1,1301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: SICP | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/sicp/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SICP Section 1.3]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3/"/>
+    <updated>2013-06-27T01:06:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/06/27/sicp-section-1-3</id>
+    <content type="html"><![CDATA[<p>Procedures as Arguments
+~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>Why &lsquo;high order procedures&rsquo; is useful?</p>
+
+<p>.. highlights::</p>
+
+<pre><code>Often the same programming pattern will be used with a number of different
+procedures. To express such patterns as concepts, we will need to construct
+procedures that can accept procedures as arguments or return procedures as
+values. Procedures that manipulate procedures are called high-order
+procedures, they can serve as powerful abstraction mechanisms, vastly
+increaseing the expressive power of our language.
+</code></pre>
+
+<p>Lambda
+~~~~~~</p>
+
+<ul>
+<li><p>Using lambda to create anonymous functions:</p>
+
+<ul>
+<li><strong>(define (plus4 x) (+ x 4))</strong> is <em>equivalent to</em> <strong>(define plus4 (lambda (x) (+ x 4)))</strong></li>
+</ul>
+</li>
+<li><p>Using lambda(let) to create local variables</p></li>
+</ul>
+
+
+<p>.. highlights::</p>
+
+<pre><code>Sometimes we can use internal definitions to get the same effect as with let.
+</code></pre>
+
+<p>And in which cases we couldn&rsquo;t get the same effect?</p>
+
+<p>Abstractions and first-class procedures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>As programmers, we should be alert to oppotunities to identify the underlying
+abstractions in our programs and to build upon then and generalize them to
+create more powerful abstractions. This is not to say one should always write
+programs in the most abstract way possible; expert programmers know how to
+choose the level of abstraction appropriate to their task. But it's important
+to be able to think in terms of these abstractions, so that we can be ready
+to apply them in new contexts.
+</code></pre>
+
+<p>Exercises
+~~~~~~~~~</p>
+
+<p><strong>1.29</strong>
+Answer:</p>
+
+<p>This is not very hard, just simply translate the simpson rule definition to code:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (simpson-rule f a b n)
+  ; still use 'define' since we haven't learned 'let' till now
+  (define h (/ (- b a) n))
+  ; the procedure to compute 'yk', the helper method used by 'term'
+  (define (y k) (f (+ a (* k h))))
+  ; get the 'next and 'term for the sum procedure
+  (define (next k) (+ k 1))
+  (define (term k)
+    (* (cond ((or (= k 1) (= k n)) 1)
+             ((even? k) 2)
+             ((odd? k) 4))
+       (y k)))
+  (/ (* h (sum term 0 next n)) 3))
+
+(define (sum term a next b)
+  (if (&gt; a b)
+    0
+    (+ (term a)
+       (sum term (next a) next b))))
+
+(define (integral f a b dx)
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b) dx))
+
+(define (cube x) (* x x x))
+
+(simpson-rule cube 0 1 100.0)
+(simpson-rule cube 0 1 1000.0)
+(integral cube 0 1 0.01)
+(integral cube 0 1 0.001)
+
+;; the output:
+; 0.24999998999999987
+; 0.24999999999900027
+; 0.24998750000000042
+; 0.249999875000001
+</code></pre>
+
+<p><strong>1.30</strong>
+Answer:</p>
+
+<p>Put both the recursive and iterative versions here to compare:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (sum term a next b)
+  (if (&gt; a b)
+    0
+    (+ (term a)
+       (sum term (next a) next b))))
+
+(define (sum-iter term a next b)
+  (define (iter a result)
+    (if (&gt; a b)
+        result
+        (iter (next a) (+ (term a) result))))
+  (iter a 0))
+
+
+(sum (lambda (x) x) 1 (lambda (x) (+ x 1)) 10)
+(sum-iter (lambda (x) x) 1 (lambda (x) (+ x 1)) 10)
+
+(sum (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+(sum-iter (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+</code></pre>
+
+<p>They produce the same results as expected.</p>
+
+<p><strong>1.31</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (product term a next b)
+  (if (&gt; a b)
+    1
+    (* (term a)
+       (product term (next a) next b))))
+
+(define (product-iter term a next b)
+  (define (iter cur result)
+    (if (&gt; cur b)
+      result
+      (iter (next cur) (* (term cur) result))))
+  (iter a 1))
+
+(define (factorial n)
+  (define (identity x) x)
+  (product identity 1 inc n))
+
+(define (inc x) (+ x 1))
+
+
+(product (lambda (x) x) 1 (lambda (x) (+ x 1)) 6)
+(product-iter (lambda (x) x) 1 (lambda (x) (+ x 1)) 6)
+(factorial 6)
+(factorial 10)
+(product (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+(product-iter (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+
+;; compute the approximations to PI using the formula:
+;; PI   2*4*4*6*6*8...
+;; -- = --------------
+;; 4    3*3*5*5*7*7...
+
+;; here, term is (2n/(2n + 1) * 2(n+1) /(2n + 1)), n = 1, 2, 3, ...
+(/
+  (product-iter
+    (lambda (n)
+      (* (* 2 n) (* 2 (+ n 1.0))))
+    1
+    inc
+    50)
+  (product-iter
+    (lambda (n)
+      (* (+ (* 2 n) 1.0) (+ (* 2 n) 1.0)))
+    1
+    inc
+    50)
+)
+</code></pre>
+
+<p>There might be better ways to translate the formula. The solution above the
+is not veru accurate and if the upper bound is too large (say 100), it will
+yield to &lsquo;nan+&rsquo;.</p>
+
+<p><strong>1.32</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (accumulate combiner null-value term a next b)
+  (if (&gt; a b)
+    null-value
+    (combiner (term a)
+              (accumulate combiner null-value term (next a) next b))))
+
+(define (accumulate-iter combiner null-value term a next b)
+  (define (iter cur result)
+    (if (&gt; cur b)
+      result
+      (iter (next cur) (combiner (term cur) result))))
+  (iter a null-value))
+
+(define (sum term a next b)
+  ; (accumulate + 0 term a next b))
+  (accumulate-iter + 0 term a next b))
+
+(define (product term a next b)
+  ; (accumulate * 1 term a next b))
+  (accumulate-iter * 1 term a next b))
+
+
+(sum (lambda (x) x) 1 (lambda (x) (+ x 1)) 6)
+(product (lambda (x) x) 1 (lambda (x) (+ x 1)) 6)
+(sum (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+(product (lambda (x) (* x x)) 1 (lambda (x) (+ x 1)) 5)
+</code></pre>
+
+<p><strong>1.33</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (filtered-accumulate combiner null-value term a next b filter)
+  (if (&gt; a b)
+    null-value
+    (if (filter a)
+      (combiner (term a)
+                (filtered-accumulate combiner null-value term (next a) next b filter))
+      (filtered-accumulate combiner null-value term (next a) next b filter))))
+
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((&gt; (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+  (else (find-divisor n (+ test-divisor 1)))))
+
+(define (square x) (* x x))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (inc x) (+ x 1))
+
+(define (identity x) x)
+
+; return a procedure Integer -&gt; Boolean
+; that check if the given integer is relative prime with n
+(define (relative-prime? n)
+  (define (f a) (= (gcd n a) 1))
+  f)
+
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))
+
+(filtered-accumulate + 0 square 2 inc 10 prime?)
+(filtered-accumulate * 1 identity 1 inc 10 (relative-prime? 10))
+</code></pre>
+
+<p><strong>1.34</strong>
+Answer:</p>
+
+<p>Apply (f f) with get (f 2), while tring to apply (f 2), error will be issued
+since a procedure is expected but an integer parameter 2 is given.</p>
+
+<p><strong>1.35</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough x y)
+    (&lt; (abs (- x y)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough next guess)
+        next
+        (try next))))
+  (try first-guess))
+
+
+; since the golden-ratio x satisfies that x^2 = x + 1
+(define (golden-ratio)
+  (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0))
+
+
+(golden-ratio)
+</code></pre>
+
+<p><strong>1.36</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough x y)
+    (&lt; (abs (- x y)) tolerance))
+  (define (try guess)
+    (display "current guess is: " )
+    (display guess)
+    (newline)
+    (let ((next (f guess)))
+      (if (close-enough next guess)
+        next
+        (try next))))
+  (try first-guess))
+
+
+; without average damping
+(fixed-point (lambda (x) (/ (log 1000) (log x))) 2.0)
+
+; output below:
+; current guess is: 2.0
+; current guess is: 9.965784284662087
+; current guess is: 3.004472209841214
+; current guess is: 6.279195757507157
+; current guess is: 3.759850702401539
+; current guess is: 5.215843784925895
+; current guess is: 4.182207192401397
+; current guess is: 4.8277650983445906
+; current guess is: 4.387593384662677
+; current guess is: 4.671250085763899
+; current guess is: 4.481403616895052
+; current guess is: 4.6053657460929
+; current guess is: 4.5230849678718865
+; current guess is: 4.577114682047341
+; current guess is: 4.541382480151454
+; current guess is: 4.564903245230833
+; current guess is: 4.549372679303342
+; current guess is: 4.559606491913287
+; current guess is: 4.552853875788271
+; current guess is: 4.557305529748263
+; current guess is: 4.554369064436181
+; current guess is: 4.556305311532999
+; current guess is: 4.555028263573554
+; current guess is: 4.555870396702851
+; current guess is: 4.555315001192079
+; current guess is: 4.5556812635433275
+; current guess is: 4.555439715736846
+; current guess is: 4.555599009998291
+; current guess is: 4.555493957531389
+; current guess is: 4.555563237292884
+; current guess is: 4.555517548417651
+; current guess is: 4.555547679306398
+; current guess is: 4.555527808516254
+; current guess is: 4.555540912917957
+; 4.555532270803653
+
+; with average damping
+(fixed-point (lambda (x) (/ (+ x (/ (log 1000) (log x))) 2)) 2.0)
+
+; output below:
+; current guess is: 2.0
+; current guess is: 5.9828921423310435
+; current guess is: 4.922168721308343
+; current guess is: 4.628224318195455
+; current guess is: 4.568346513136242
+; current guess is: 4.5577305909237005
+; current guess is: 4.555909809045131
+; current guess is: 4.555599411610624
+; current guess is: 4.5555465521473675
+; 4.555537551999825
+</code></pre>
+
+<p><strong>1.37</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; k-term finite continued fraction
+(define (cont-frac n d k)
+  (define (frac i)
+    (if (= i k)
+      (/ (n i) (d i))
+      (/ (n i) (+ (d i) (frac (+ i 1))))))
+  (frac 1))
+
+(define (cont-frac-iter n d k)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0))
+
+
+; k = 10 produce 0.6179775280898876
+(cont-frac (lambda (i) 1.0)
+           (lambda (i) 1.0)
+           10)
+
+(cont-frac-iter (lambda (i) 1.0)
+                (lambda (i) 1.0)
+                10)
+
+; k = 11 produce 0.6180555555555556
+(cont-frac (lambda (i) 1.0)
+           (lambda (i) 1.0)
+           11)
+
+(cont-frac-iter (lambda (i) 1.0)
+                (lambda (i) 1.0)
+                11)
+
+
+; TODO: implement a procedure to retry different k until the first
+; one that produce the value accurate to 4 decimal.
+</code></pre>
+
+<p><strong>1.38</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (cont-frac n d k)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0))
+
+
+; if    i % 3 == 2, (d i) = 2 * ((i + 1) / 3)
+; else  (d i) = 1
+(+ (cont-frac (lambda (i) 1.0)
+              (lambda (i) (let ((r (remainder i 3)))
+                            (if (= r 2)
+                              (* 2.0 (/ (+ i 1) 3))
+                              1.0)))
+              10)
+   2)
+</code></pre>
+
+<p><strong>1.39</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; if i = 1, (n i) = -x else (n i) = -x^2
+; (d i) = 2 * i - 1
+(define (tan-cf x k)
+  (cont-frac (lambda (i) (if (= i 1)
+                           x
+                           (- 0(* x x))))
+             (lambda (i) (- (* 2 i) 1))
+             k))
+
+(define (cont-frac n d k)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0))
+
+
+; tan (pi / 8)
+(tan-cf 0.4 10)
+
+; tan (pi / 4)
+(tan-cf 0.7853981633974483 10)
+</code></pre>
+
+<p><strong>1.40</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (average-damp f)
+  (define (average a b)
+    (/ (+ a b) 2))
+  (lambda (x) (average x (f x))))
+
+(define (square x) (* x x))
+
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough x y)
+    (&lt; (abs (- x y)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough next guess)
+        next
+        (try next))))
+  (try first-guess))
+
+;; re-write the square-root procedure
+(define (sqrt x)
+  (fixed-point (average-damp (lambda (y) (/ x y))) 1.0))
+
+;; cube root, similar with above
+(define (cube-root x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y)))) 1.0))
+
+
+(define dx 0.00001)
+
+(define (deriv g)
+  (lambda (x) (/ (- (g (+ x dx)) (g x)) dx)))
+
+(define (cube x)
+  (* x x x))
+
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (newton-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (cubic a b c)
+  (lambda (x)
+    (+ (* x x x) (* a (square x)) (* b x) c)))
+
+; zero of x^3 + x^2 + x + 1
+; should be -1
+(newton-method (cubic 1 1 1) 1.0)
+</code></pre>
+
+<p><strong>1.41</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>;; Note: it's a little confusing at first, 'double' is not apply the function
+;; 'f' and double the result, it's 'DOUBLE' the application of the function
+;; 'f'.
+(define (double f)
+  (lambda (x) (f (f x))))
+
+(define (inc x)
+  (+ x 1))
+
+((double inc) 1)
+(((double double) inc) 1)
+
+; this will get 21
+(((double (double double)) inc) 5)
+</code></pre>
+
+<p><strong>1.42</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (square x) (* x x))
+
+(define (inc x) (+ x 1))
+
+
+((compose square inc) 6)
+</code></pre>
+
+<p><strong>1.43</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (repeated f n)
+  (if (= n 1)
+    f
+    (compose f (repeated f (- n 1)))))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (square x) (* x x))
+
+(define (inc x) (+ x 1))
+
+
+((repeated square 2) 5)
+</code></pre>
+
+<p><strong>1.44</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (n-fold-smooth f n)
+  (repeated (smooth f) n))
+
+(define (smooth f)
+  (let ((dx 0.0001))
+    (lambda (x)
+      (/ (+ (f (- x dx)) (f x) (f (+ x dx))) 3))))
+
+(define (repeated f n)
+  (if (= n 1)
+    f
+    (compose f (repeated f (- n 1)))))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+((n-fold-smooth (lambda (x) (/ 1.0 x)) 3) 6)
+((lambda (x) (/ 1.0 x)) 6)
+</code></pre>
+
+<p><strong>1.45</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define tolerance 0.00001)
+
+;; from the experiments, the nth root requires at least log2(n) average damps
+(define (nth-root x n)
+  (fixed-point
+    ((repeated average-damp (floor (/ (log n) (log 2))))
+    (lambda (y) (/ x (expt y (- n 1)))))
+    1.0))
+
+(define (fixed-point f first-guess)
+  (define (close-enough? x y)
+    (&lt; (abs (- (/ x y) 1)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      ; (display next)
+      ; (newline)
+      (if (close-enough? next guess)
+        next
+        (try next))))
+  (try first-guess))
+
+(define (average-damp f)
+  (define (average x y)
+    (/ (+ x y) 2))
+  (lambda (x) (average x (f x))))
+
+(define (repeated f n)
+  (if (= n 1)
+    f
+    (compose f (repeated f (- n 1)))))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+
+(nth-root 16 4)
+(nth-root 32 5)
+(nth-root 64 6)
+(nth-root 128 7)
+(nth-root 256 8)
+(nth-root 10000000000000000000000000000000000000000000000000000000000000000 64)
+</code></pre>
+
+<p><strong>1.46</strong>
+Answer:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define tolerance 0.00001)
+
+(define (iterative-improve enough? improve)
+  (define (try guess)
+    (let ((next-guess (improve guess)))
+      (if (enough? guess next-guess)
+        guess
+        (try next-guess))))
+  try)
+
+(define (fixed-point f first-guess)
+  ((iterative-improve close-enough? f) first-guess))
+
+(define (sqrt x)
+  ((iterative-improve
+      close-enough?
+      (lambda (y) (average y (/ x y))))
+      1.0))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (close-enough? x y)
+  (&lt; (abs (/ (- x y) y)) tolerance))
+
+
+(sqrt 4)
+(sqrt 6)
+(sqrt 9)
+
+(fixed-point cos 1.0)
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SICP Section 1.2]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2/"/>
+    <updated>2013-06-14T00:54:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/06/14/sicp-section-1-2</id>
+    <content type="html"><![CDATA[<p>Recursive Process V.S. Iterative Process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<ul>
+<li><p>Recursive process</p>
+
+<p>The substitution model of a recursive process reveals a shape of expansion
+followed by constraction. The expansion occurs as the process builds up a
+chain of defered operations. The contraction occurs as the operations are
+actually performed.</p></li>
+<li><p>Iterative process</p>
+
+<p>An iterative process is one whose state can be summarized by a fixed number
+of state variables, together with a fixed rule that describes how the state
+variables should be updated as the process moves from state to state and an
+(optional) end test that specifies the conditions under which the process
+should terminate.</p></li>
+</ul>
+
+
+<p>In the iterative case, the program variables provide a complete description
+of the state of the process at any point, while in the recursive case, there
+is some additional &ldquo;hidden&rdquo; information, maintained by the interpreter and not
+contained in the program variables.</p>
+
+<p>.. highlights::</p>
+
+<pre><code>In contrasting iteration and recursion, we must be careful not to confuse
+the notion of a recursive process with the notion of a recursive procedure.
+When we describe a procedure as recursive, we are referring to the
+syntactic fact that the procedure definition refers (either directly or
+indirectly) to the procedure itself. But when we describe a process as
+following a pattern that is, say, linearly recursive, we are speaking about
+how the process evolves, not about the syntax of how a procedure is written.
+It may seem disturbing that we refer to a recursive procedure as generating
+an iterative process.
+</code></pre>
+
+<p>Lame&rsquo;s Theorem
+~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>If Euclid's Algorithm requires k steps to compute the GCD of some pair,
+then the smaller number in the pair must be greater than or equal to the
+kth Fibonacci number.
+</code></pre>
+
+<p>Fermat&rsquo;s Little Theorem
+~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>If n is a prime number and a is any positive integer less than n, then a
+raised to the nth power is congruent to a modulo n.
+</code></pre>
+
+<p>Exercises
+~~~~~~~~~</p>
+
+<p><strong>1.9</strong>
+Answer: The first process is recursive and the second one is iterative.</p>
+
+<p><strong>1.10</strong>
+Answer: from the definition of (A x y), we have:</p>
+
+<p>(A 1 10) = A(0 (A 1 9)) = 2 * (A 1 9) = &hellip; = 2<sup>9</sup> * (A 1 1) = 2<sup>10</sup></p>
+
+<p>(A 2 4) = 65536</p>
+
+<p>(A 3 3) = 65536</p>
+
+<p>(f n) computes <em>2n</em></p>
+
+<p>(g n) computes <em>2<sup>n</sup></em></p>
+
+<p>(h n) computes <em>2<sup>2</sup><sup>2</sup>&hellip; (n times)</em></p>
+
+<p><strong>1.11</strong>
+Answer: This is similar with the example of computing Fibonacci number.</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (f-recursive n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        ((= n 2) 2)
+        (else (+ (f-recursive (- n 1))
+                 (* (f-recursive (- n 2)) 2)
+                 (* (f-recursive (- n 3)) 3)))))
+
+
+(define (f-iterative n)
+  (f-iter 0 1 2 n))
+
+(define (f-iter a b c count)
+  (cond ((= count 0) a)
+        ((= count 1) b)
+        ((= count 2) c)
+        (else (f-iter b c (+ c (* b 2) (* a 3)) (- count 1)))))
+</code></pre>
+
+<p><strong>1.12</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; both row and col indexes start at 0
+(define (pascal-triangle row col)
+  (cond ((= col 0) 1)
+        ((= row col) 1)
+        (else (+ (pascal-triangle (- row 1) (- col 1))
+                 (pascal-triangle (- row 1) col)))))
+</code></pre>
+
+<p><strong>1.15</strong>
+Answer:</p>
+
+<ol type="a">
+<li>from the the procedure definition, suppose <em>p</em> will be called t times,
+we have:</li>
+</ol>
+
+
+<p>a / (3<sup>t</sup>) &lt;= 0.1, which leads to:</p>
+
+<p>log(10a) &lt;= t, so t = ceiling (log(10a)) = 5, (the base of the log is 3)</p>
+
+<ol type="a">
+<li>both the space and number of steps depend on how many times <em>p</em> is called,
+so it&rsquo;s O(t) = O(log(a)).</li>
+</ol>
+
+
+<p><strong>1.16</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (fast-expt b n)
+  (fast-expt-iter b n 1))
+
+(define (fast-expt-iter b n product)
+  (cond ((= n 0) product)
+        ((even? n) (fast-expt-iter (square b) (/ n 2) product))
+        (else (fast-expt-iter b (- n 1) (* b product)))))
+
+(define (square x) (* x x))
+
+(define (even? n)
+  (= (remainder n 2) 0))
+</code></pre>
+
+<p><strong>1.17</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (mul a b)
+  (cond ((= b 0) 0)
+        ((even? b) (mul (double a) (halve b)))
+        (else (+ a (mul a (- b 1))))))
+
+(define (double x) (* x 2))
+(define (halve x) (/ x 2))
+</code></pre>
+
+<p><strong>1.18</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (mul a b)
+  (mul-iter a b 0))
+
+(define (mul-iter a b sum)
+  (cond ((= b 0) sum)
+        ((even? b) (mul-iter (double a) (halve b) sum))
+        (else (mul-iter a (- b 1) (+ a sum)))))
+
+
+(define (double x) (* x 2))
+(define (halve x) (/ x 2))
+</code></pre>
+
+<p><strong>1.19</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; use the matrix multiplication to represent the transformation
+
+;                       0 1
+; (fib(n-1), fib(n)) *        = (fib(n), fib(n-1) + fib(n)) = (fib(n), fib(n+1))
+;                       1 1
+
+; a &lt;- a + b
+; b &lt;- a
+
+; the state transformation above is just a special case of the below one when
+; p = 0 and q = 1
+
+; a &lt;- bq + aq + ap
+; b &lt;- bp + aq
+
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q count)
+  (cond ((= count 0) b)
+        ((even? count)
+         (fib-iter
+           a
+           b
+           (+ (square p) (square q))
+           (+ (square q) (* p q 2))
+           (/ count 2)))
+  (else (fib-iter
+          (+ (* b q) (* a q) (* a p))
+          (+ (* b p) (* a q))
+          p
+          q
+          (- count 1)))))
+
+(define (square x) (* x x))
+</code></pre>
+
+<p><strong>1.21</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>; the following expressions produce
+; 199
+; 1999
+; 7
+
+(smallest-divisor 199)
+(smallest-divisor 1999)
+(smallest-divisor 19999)
+</code></pre>
+
+<p><strong>1.25</strong>
+Answer:</p>
+
+<p>Since <em>Scheme</em> has built-in support for arbitrary precision arithmetic, the
+procedure will produce the same result as the original <em>expmod</em>, however,
+it will be very inefficient since the huge number arithmetic will take much
+longer time than the numbers can be represented by a single computer word.</p>
+
+<p>The original <em>expmod</em> used the successive squaring, the numbers to be processed
+will never be larger than m<sup>2</sup>.</p>
+
+<p><strong>1.26</strong>
+Answer:</p>
+
+<p>With the calling of <em>square</em>, the original problem can be reduced to a sub
+problem with half of the size at each of the step when even? test is true.
+So T(n) = T(n/2) = O(logn)</p>
+
+<p>However, if the explicit multiplication used instead, the recursive call
+of expmod will be evaluated twice, it not only just compute the sub
+problems two time, it is actually a tree recursion like the first solution
+for computing fibnacci sequence, so the number of expmod calls grow
+exponentially, which conclues that T(n) = O(2<sup>n</sup> * logn) = O(n)</p>
+
+<p><strong>1.27</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (fermat-test n)
+  (fermat-test-iter n 2))
+
+(define (fermat-test-iter n a)
+  (cond ((= n a) true)
+        ((not (= (expmod a n n) a)) false)
+        (else (fermat-test-iter n (+ a 1)))))
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m)) m))
+        (else (remainder (* base (expmod base (- exp 1) m)) m))))
+
+(define (square x) (* x x))
+
+
+; Carmichael numbers
+(fermat-test 561)
+(fermat-test 1105)
+(fermat-test 1729)
+(fermat-test 2465)
+(fermat-test 2821)
+(fermat-test 6601)
+; these all give #t
+
+(prime? 561)
+(prime? 1105)
+(prime? 1729)
+(prime? 2465)
+(prime? 2821)
+(prime? 6601)
+; these all give #f
+</code></pre>
+
+<p><strong>1.28</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (miller-rabin-test n)
+  (define (try-it a)
+    (= (expmod-with-signal a (- n 1) n) 1))
+  (try-it (+ 2 (random (- n 2)))))
+
+(define (expmod-with-signal base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (square-with-signal (expmod-with-signal base (/ exp 2) m) m))
+        (else 
+         (remainder (* base (expmod-with-signal base (- exp 1) m)) m))))
+
+(define (square-with-signal a n)
+  (if (and (not (= a 1))
+           (not (= a (- n 1)))
+           (= (remainder (* a a) n) 1))
+      0
+      (remainder (* a a) n)))
+
+
+(miller-rabin-test 561)
+(miller-rabin-test 1105)
+(miller-rabin-test 1729)
+(miller-rabin-test 2465)
+(miller-rabin-test 2821)
+(miller-rabin-test 6601)
+; these will all give #f with quite a chance, but with enough runs, it will
+; have some false positive
+
+(newline)
+
+(miller-rabin-test 7)
+(miller-rabin-test 23)
+(miller-rabin-test 103)
+(miller-rabin-test 1009)
+(miller-rabin-test 1019)
+(miller-rabin-test 1000033)
+; these will always all give #t
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SICP Section 1.1]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1/"/>
+    <updated>2013-05-14T00:39:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/05/14/sicp-section-1-1</id>
+    <content type="html"><![CDATA[<p>.. highlights::</p>
+
+<pre><code>Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The evolution
+of a process is directed by pattern of rules called a program.
+</code></pre>
+
+<p>Why use Lisp for the book?</p>
+
+<p>.. highlights::</p>
+
+<pre><code>The most significant unique feature of Lisp is the fact that Lisp descriptions
+of processes, called procedures, can themselves be represented and manipulated
+as Lisp data. The importance of this is that there are powerful program-design
+techniques that rely on the ability to blur the traditional distinction between
+"passive" data and "active" processes.
+</code></pre>
+
+<p>The three mechanisms of combining simple ideas to form more complex ideas in any
+powerful programming languages:</p>
+
+<ol>
+<li>primitive expressions
+
+<h1>. means of combination</h1>
+
+<h1>. means of abstraction</h1></li>
+</ol>
+
+
+<p>Substitution model
+~~~~~~~~~~~~~~~~~~</p>
+
+<ul>
+<li><p>Applicative order</p>
+
+<p>Evaluate the operator and operands first and then applies the resulting procedure
+to the resulting arguments. &ldquo;Fully expand and then reduce&rdquo;</p></li>
+<li><p>Normal order</p>
+
+<p>Don&rsquo;t evaluate the operands until their values are needed, instead, substitute
+operand expressions for parameters until it obtained an expression involving only
+primitive operators, and would then perform the evaluation. &ldquo;Evaluate the
+arguments and then apply&rdquo;</p></li>
+</ul>
+
+
+<p>Example: Square Roots by Newton&rsquo;s Method
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. highlights::</p>
+
+<pre><code>The contrast between function and procedure is a reflection of the general
+distinction between describing properties of things and describing how to
+do things, or, as it is sometimes refered to, the distinction between
+declarative knowledge and imperative knowledge. In mathematics we are
+usually concerned with declarative (what is) descriptions, whereas in
+computer science we are usually concerned with imperative (how to)
+descriptions.
+</code></pre>
+
+<p>Exercises
+~~~~~~~~~</p>
+
+<p><strong>1.3</strong> Define a procedure that takes three numbers as arguments and return the
+sum of squares of the two larger numbers.</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (square x) (* x x))
+
+(define (sum-of-squares a b) (+ (square a) (square b)))
+
+(define (min a b)
+  (if (&lt; a b)
+     a
+     b))
+
+(define (max a b)
+  (if (&lt; a b)
+     b
+     a))
+
+(define (sum-of-squares-of-2-largest a b c)
+  (sum-of-squares (max a b) (max c (min a b))))
+</code></pre>
+
+<p><strong>1.4</strong> Observe that our model of evaluation allows for combinations whose
+operators are compound expressions. Use this observation to describe the
+behavior of the following procedure:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (a-plus-abs-b a b)
+  ((if (&gt; b 0) + -) a b))
+</code></pre>
+
+<p>if b is greater than 0, the operator that will apply to a and b is +, or else
+it will be -, so the a-plus-abs-b will always result in a plus abs of b.</p>
+
+<p><strong>1.5</strong>
+Answer: the interpreter that uses applicative order evaluation will hang due
+to the infinite recursive call of &lsquo;p&rsquo;, while an interpreter that uses normal
+order evaluation will get 0.</p>
+
+<p><em>Note:</em> <strong>p</strong> is a function, <strong>(p)</strong> is a call to function p.</p>
+
+<p><strong>1.6</strong>
+Answer: the interpreter will hang due to the infinite recursive call to
+<em>sqrt-iter</em>. Since List uses applicative order evaluation, in the definition
+of new-if, the else-clause will always be evaluated no matter the result of
+the predicate, thus lead to infinite recursive call to sqrt-iter. That&rsquo;s why
+<strong>if</strong> needs to be a special form, the predicate expression is evaluated first,
+and the result determines whether to evaluate the consequent or the alternative
+expression.</p>
+
+<p><strong>1.7</strong>
+Answer: For small values, the absolute tolerance 0.001 is too large, so the
+results become inaccurate. For example, (sqrt 0.001) gives 0.04124542607499115
+on my machine. (ubuntu 12.10 x86_64); And for large values, due to the precision
+limitation of float-point representation, the guess couldn&rsquo;t be refined to a
+value that can be represented within the tolerance. In such cases, the program
+can endlessly alternate between two guesses that are more than 0.001 away from
+the true square root.</p>
+
+<p>so, instead of using absolute tolerance, we changed to use the relative
+tolerance of two continuous guess values. This can be demonstrated with the
+below updated good-enough? procedure:</p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (good-enough? guess x)
+  (&lt; (abs (- (improve guess x) guess)) 0.001))
+</code></pre>
+
+<p><strong>1.8</strong></p>
+
+<p>.. code-block:: scheme</p>
+
+<pre><code>(define (cbrt-iter guess x)
+  (if (good-enough? guess x)
+    guess
+    (cbrt-iter (improve guess x) x)))
+
+(define (improve guess x)
+  (/ (+ (/ x (square guess)) (* 2 guess)) 3))
+
+(define (good-enough? guess x)
+  (&lt; (abs (- (improve guess x) guess)) 0.001))
+
+(define (square x)
+  (* x x))
+
+(define (cbrt x)
+  (cbrt-iter 1.0 x))
+</code></pre>
+
+<p>The only difference between cbrt and sqrt is the <strong>improve</strong> procedure.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Coursera online functional programming course - a retrospective]]></title>
+    <link href="http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/"/>
+    <updated>2013-01-06T15:52:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review</id>
+    <content type="html"><![CDATA[<p>Here comes the summary of the Coursera course
+<code>Fucntional Programming Principles in Scala &lt;https://class.coursera.org/progfun-2012-001/class/index&gt;</code>_
+It&rsquo;s a little bit late, it has been two months since I finished the course.
+This is the first Coursera course I followed from the very beginning to the end
+and accomplished all the programming assignments with full scores, which helped
+me to get the certificate with distinction.</p>
+
+<p>.. image:: /images/posts/coursera_scala_certificate.jpg</p>
+
+<p>First the excellent parts of the course:</p>
+
+<ul>
+<li>Martin Odersky is a pretty good teacher, and all the lectures are well
+designed. I enjoyed watching the lectures a lot and most of which I have
+read more than once.</li>
+<li>The programming assignments are well structured, with detailed instructions
+and step by step guide. In each of the assignments, the whole task is split
+into several steps with approprivate level of abstractions.</li>
+<li>There are also many useful supporting materials like scala style guide, sbt
+tutorial, instructions on tools setup for the course, which made it easier
+to concentrate on the course content. For me, I don&rsquo;t have scala develop
+environment setup before the course, and by following the tools setup section
+in only took me less than half an hour to get everything ready for trying the
+example code and the assignments.</li>
+</ul>
+
+
+<p>As for the less-good things, I would say:</p>
+
+<ul>
+<li>Both the lectures and the assignments are quite easy for an experienced
+programmers (No functional programming background needed), I was expecting
+more challenging stuff.</li>
+<li>There are no official solutions distributed. (The course will be offered
+again some time later) However, I still think for those students who passed
+the course should be qualified to get the solutions so that they can compare
+those with their own to see where they can still improve.</li>
+<li>It&rsquo;s a pity that this is only the first half of an advanced undergraduate
+course that Martin taught on campus. I am interested in the other half.</li>
+</ul>
+
+
+<p>After taking this cousre, I got a deeper understanding of the functional
+programming basics and it made me feel more comfortable while picking up
+SICP again (after 3 years). Now, I am convinced that I am able to go through
+SICP and finish most of the exercises. Also, I had a firmer grasp of Scala
+even though I didn&rsquo;t write more than 100 lines of Scala before; I understand
+more about the scala syntax, idioms and even the motivations behind some of the
+language structures. E.g., call by name/value, lazy evaluation, currying,
+pattern matching and so on. I will publish my detailed notes on the lectures
+and assignments to this blog later.</p>
+
+<p>To conclude, I really enjoyed taking the course and many thanks to Martin
+, the TAs, and also the coursera staff for offering such a wonderful course.</p>
+]]></content>
+  </entry>
+  
+</feed>

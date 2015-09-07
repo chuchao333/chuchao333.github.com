@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Python bisect - Chao's Random Thoughts</title>
+  <meta name="author" content="Chao Chu">
+
+  
+  <meta name="description" content="Notes on reading the source of bisect module">
+  <meta name="keywords" content="bisect, python, binary search">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Chao's Random Thoughts" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chao's Random Thoughts</a></h1>
+  
+    <h2>Keep looking, don't settle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:chuchao333.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/notes">Notes</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python Bisect</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-19T20:01:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>This module provides support for maintaining a list in sorted order without
+having to sort the list after each insertion. It uses a basic bisection
+algorithm similar with the classic binary search.</p>
+</div>
+<div class="section" id="review-of-binary-search">
+<h2>Review of binary search</h2>
+<p>According to <a class="reference external" href="http://www.amazon.com/Programming-Pearls-2nd-Edition-Bentley/dp/0201657880/ref=sr_1_1?ie=UTF8&amp;qid=1345379618&amp;sr=8-1&amp;keywords=programming+pearls">'Programming Pearls'</a>
+by Jon Bentley, It's very hard to write a correct binary search(Unbelievable, Uh?).
+Below is the note from the book:</p>
+<blockquote class="highlights">
+I've assigned [binary search] in courses at Bell Labs and IBM.
+Professional programmers had a couple of hours to convert [its] description
+into a program in the language of their choice; a high-level pseudocode
+was fine. At the end of the speci?ed time, almost all the programmers
+reported that they had correct code for the task. We would then take thirty
+minutes to examine their code, which the programmers did with test cases.
+In several classes and with over a hundred programmers, the results varied
+little: ninety percent of the programmers found bugs in their programs (and
+I wasn't always convinced of the correctness of the code in which no bugs were
+found). I was amazed: given ample time, only about ten percent of professional
+programmers were able to get this small program right. But they aren't the only
+ones to ?nd this task difficult: in the history in Section 6.2.1 of his
+'Sorting and Searching', Knuth points out that while the first binary search
+was published in 1946, the first published binary search without bugs did not
+appear until 1962.</blockquote>
+<p>Understanding how to use loop invariants in composing a program is very important,
+so let's first implement a binary search and prove the correctness utilizing this.
+Here we use a simplified specification compared to the bsearch function in the C
+standard library.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="kt">int</span> <span class="n">binsearch</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+</span><span class="line"><span class="c1">// @require 0 &lt;= n &amp;&amp; n &lt;= length(A)</span>
+</span><span class="line"><span class="c1">// @require is_sorted(A, n)</span>
+</span><span class="line"><span class="cm">/* @ensures (-1 == result &amp;&amp; !is_in(x, A, n))</span>
+</span><span class="line"><span class="cm">            || ((0 &lt;= result &amp;&amp; result &lt; n) &amp;&amp; A[result] == x)</span>
+</span><span class="line"><span class="cm">*/</span>
+</span><span class="line"><span class="p">{</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">higher</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">while</span> <span class="p">(</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="n">higher</span><span class="p">)</span>
+</span><span class="line">    <span class="c1">// @loop_invariant 0 &lt;= lower &amp;&amp; lower &lt;= higher &amp;&amp; higher &lt;= n</span>
+</span><span class="line">    <span class="c1">// @loop_invariant (lower == 0 || A[lower - 1] &lt; x)</span>
+</span><span class="line">    <span class="c1">// @loop_invariant (higher == n || A[higher] &gt; x)</span>
+</span><span class="line">    <span class="p">{</span>
+</span><span class="line">        <span class="n">mid</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="p">(</span><span class="n">higher</span> <span class="o">-</span> <span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class="line">        <span class="c1">// @assert lower &lt;= mid &amp;&amp; mid &lt; higher</span>
+</span><span class="line">        <span class="k">if</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+</span><span class="line">            <span class="k">return</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span>
+</span><span class="line">            <span class="n">lower</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class="line">        <span class="k">else</span>
+</span><span class="line">            <span class="n">higher</span> <span class="o">=</span> <span class="n">mid</span><span class="p">;</span>
+</span><span class="line">    <span class="p">}</span>
+</span><span class="line">    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure><p>It's easy to prove that the loop invariants are strong enough to imple the
+postcodition of the function(&#64;ensures). Does this function terminate? In the
+loop body, we have lower &lt; higher, so lower &lt;= mid &amp;&amp; mid &lt; higher, then the
+intervals from <em>lower</em> to <em>mid</em> and from <em>(mid+1)</em> to <em>higher</em> are strictly
+smaller than the original interval (lower, higher), unless we find the element,
+the difference between higher and lower will eventually become 0 and we will
+exit the loop.</p>
+<p><strong>The bisect() functions provided in this module are useful for finding the
+insertion points but can be tricky or awkward to use for common searching
+tasks.</strong></p>
+</div>
+<div class="section" id="code-comments">
+<h2>Code comments</h2>
+<p>The above binsearch function will return the first of the elements that equals
+to the target if there are more than one. Sometimes it's required to find the
+left most one or the right most one. We can achieve this by using the bisect()
+functions. Let's examine the pre and post conditions, and also loop invariants.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">bisect_right</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># Let l be the original lo passed in, and h be hi. In order to differentiate.</span>
+</span><span class="line">
+</span><span class="line">    <span class="c"># @requires 0 &lt;= l &amp;&amp; l &lt; h &amp;&amp; h &lt;= len(a)</span>
+</span><span class="line">    <span class="c"># @requires is_sorted(a[l:h])</span>
+</span><span class="line">    <span class="c"># @ensures all e in a[l:result] have e &lt;= x, and all e in a[result:h] have e &gt; x</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">while</span> <span class="n">lo</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">:</span>
+</span><span class="line">        <span class="c"># @loop_invariant l &lt;= lo &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= h</span>
+</span><span class="line">        <span class="c"># @loop_invariant lo == l || a[lo - 1] &lt;= x</span>
+</span><span class="line">        <span class="c"># @loop_invariant hi == h || a[hi] &gt; x</span>
+</span><span class="line">        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span class="line">        <span class="c"># @assert lower &lt;= mid &amp;&amp; mid &lt; higher</span>
+</span><span class="line">        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+</span><span class="line">            <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span>
+</span><span class="line">        <span class="k">else</span><span class="p">:</span>
+</span><span class="line">            <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">lo</span>
+</span></code></pre></td></tr></table></div></figure><p>After exiting the loop, we have lo == hi. Now we have to distinguish some cases:</p>
+<ul class="simple">
+<li>If lo == l, from the third conjunct, we know that a[hi] &gt; x, and since lo == hi,
+we have a[lo] &gt; x. In this case, all e in a[l:h] &gt; x</li>
+<li>If hi == h, from the second conjunct, we know that a[lo - 1] &lt; x, in this case,
+all e in a[l:h] &lt;= x</li>
+<li>if lo != l and hi != h, from the second and third conjuncts, we know that
+a[lo - 1] &lt;= x, a[hi] &gt; x. The post condition still holds.</li>
+</ul>
+<p>We can do the same analysis on the function bisect_left().</p>
+<p>Note: In the pre condition I explicitly written down that lo &lt; hi is required, the
+code will directly return lo when hi is less than or equal to lo, but that's simply
+meaningless, if this is the case, the sorted order of 'a' after we insert element
+before the index returned by the function.</p>
+<div class="section" id="about-the-function-prototype">
+<h3>About the function prototype</h3>
+<p>In the doc of the module, it's <strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong>
+while in the source code, it's <strong>def bisect_left(a, x, lo=0, hi=None)</strong></p>
+<p><strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong> is not valid python code, you will
+get error like this: <strong>NameError: name 'a' is not defined.</strong> This is because default
+values are computed and bound at the function definition time rather than when you
+call the function. This means that you can't have a default which is dependent on
+something that is not known until the function is called.</p>
+</div>
+</div>
+<div class="section" id="pythonic-stuff">
+<h2>Pythonic stuff</h2>
+<div class="section" id="override-function-definitions-in-python">
+<h3>Override function definitions in Python</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c"># Overwrite above definitions with a fast C implementation</span>
+</span><span class="line"><span class="k">try</span><span class="p">:</span>
+</span><span class="line">    <span class="kn">from</span> <span class="nn">_bisect</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span class="line"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span class="line">    <span class="k">pass</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="gotcha-mutable-default-arguments">
+<h3>Gotcha -- Mutable default arguments</h3>
+<p>See <a class="reference external" href="http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument">here</a>
+for more details.</p>
+</div>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-19T20:01:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/18/supporting-latex-in-octopress/" title="Previous Post: Support LaTex in Octopress">&laquo; Support LaTex in Octopress</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/21/python-abc/" title="Next Post: Python abc">Python abc &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coursera/'>coursera (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (4)</a></li>
+<li class='category'><a href='/blog/categories/scala/'>scala (1)</a></li>
+<li class='category'><a href='/blog/categories/sicp/'>sicp (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/07/scala-cake-pattern/">Scala Cake Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/14/sicp-section-1-2/">SICP Section 1.2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/sicp-section-1-1/">SICP Section 1.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/coursera-online-functional-programming-course-review/">Coursera online functional programming course - a retrospective</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Recent Comments</h1>
+        <div id="dsq-recentcomments" class="dsq-widget">
+            <script type="text/javascript" src="http://disqus.com/forums/chaoc/recent_comments_widget.js?hide_avatars=1">
+            </script>
+        </div>
+</section>
+
+<section>
+    <h2>Reading List</h2>
+    <div>
+        <script type="text/javascript" src="http://www.douban.com/service/badge/3607474/?show=dolist&amp;n=6&amp;columns=3&amp;hidelogo=yes&amp;cat=book" >
+        </script>
+    </div>
+</section>
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+    <a style="font-size: 185%" href="/blog/tags/chapter-1/">Chapter 1</a>
+<a style="font-size: 210%" href="/blog/tags/sicp/">SICP</a>
+<a style="font-size: 150%" href="/blog/tags/scala/">Scala</a>
+<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/github/">github</a>
+<a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
+<a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
+<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Chao Chu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2012/08/19/python-bisect/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2012/08/19/python-bisect/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

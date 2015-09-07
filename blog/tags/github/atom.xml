@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: github | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/github/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress and Github]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/"/>
+    <updated>2012-07-25T23:21:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
+    <content type="html"><![CDATA[<p>This post documents how I set up this blog and the problems encounted. Octopress
+is quite popular recently and you can just find a huge number of bloggers who
+have written about how to set this up online. My main references are
+<code>Setting up a blog on Octopress and github &lt;http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/&gt;</code><em>
+and <code>Blog = Github + Octopress &lt;http://mrzhang.me/blog/blog-equals-github-plus-octopress.html&gt;</code></em> (In Chinese).</p>
+
+<p>.. more</p>
+
+<h2>Ruby setup</h2>
+
+<p>Since I am new to ruby, I just follow others' instructions to install ruby by rvm.
+My first attempt was:</p>
+
+<p>.. code-block:: console</p>
+
+<p>   $ sudo apt-get install ruby-rvm</p>
+
+<p>This turned out to cause some troubles in the following steps to install ruby 1.9.2.
+I don&rsquo;t know the exact reason because I am not familiar with ruby. This <code>link &lt;http://octopress.org/docs/setup/rvm/&gt;</code><em>
+contains detailed information to install rvm. Once it&rsquo;s installed, installing octopress
+following <code>the offical guide &lt;http://octopress.org/docs/setup/&gt;</code></em> should be straightforward.</p>
+
+<h2>Host on Github</h2>
+
+<p>This is very simple in Octopress.
+I mainly followed <code>this &lt;http://code.dblock.org/octopress-setting-up-a-blog-and-contributing-to-an-existing-one&gt;</code>_, one
+thing worth mentioning here is during the step to enter the url of your repository after typing</p>
+
+<p>.. code-block:: console</p>
+
+<p>   $ rake setup_github_pages</p>
+
+<p>Here, the repo must use the username/username.github.com naming scheme,
+see <code>here &lt;https://help.github.com/articles/user-organization-and-project-pages&gt;</code>_</p>
+
+<h2>Writing posts with reStructuredText</h2>
+
+<p>As you may already know, I am a python fan. So I prefer rst to markdown.
+<code>jekyll-rst &lt;https://github.com/xdissent/jekyll-rst&gt;</code><em>
+is the plugin to add rst support to Octopress. After enabling the plugin, I changed
+default post ext in </em>confg.yml to rst. Code block in rst is quite handy to type.</p>
+
+<p>.. code-block:: python</p>
+
+<p>   def test():
+       &ldquo;&rdquo;&ldquo;Testing octopress&rdquo;&ldquo;&rdquo;</p>
+
+<pre><code>   print "this is so cool"
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

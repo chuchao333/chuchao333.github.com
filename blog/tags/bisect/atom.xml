@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: bisect | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/bisect/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python bisect]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/19/python-bisect/"/>
+    <updated>2012-08-19T20:01:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/19/python-bisect</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>This module provides support for maintaining a list in sorted order without
+having to sort the list after each insertion. It uses a basic bisection
+algorithm similar with the classic binary search.</p>
+
+<h2>Review of binary search</h2>
+
+<p>According to <code>'Programming Pearls'
+&lt;http://www.amazon.com/Programming-Pearls-2nd-Edition-Bentley/dp/0201657880/ref=sr_1_1?ie=UTF8&amp;qid=1345379618&amp;sr=8-1&amp;keywords=programming+pearls&gt;</code>_
+by Jon Bentley, It&rsquo;s very hard to write a correct binary search(Unbelievable, Uh?).
+Below is the note from the book:</p>
+
+<p>.. highlights::</p>
+
+<pre><code>I've assigned [binary search] in courses at Bell Labs and IBM.
+Professional programmers had a couple of hours to convert [its] description
+into a program in the language of their choice; a high-level pseudocode 
+was fine. At the end of the speci?ed time, almost all the programmers
+reported that they had correct code for the task. We would then take thirty
+minutes to examine their code, which the programmers did with test cases.
+In several classes and with over a hundred programmers, the results varied
+little: ninety percent of the programmers found bugs in their programs (and
+I wasn't always convinced of the correctness of the code in which no bugs were
+found). I was amazed: given ample time, only about ten percent of professional
+programmers were able to get this small program right. But they aren't the only
+ones to ?nd this task difficult: in the history in Section 6.2.1 of his
+'Sorting and Searching', Knuth points out that while the first binary search
+was published in 1946, the first published binary search without bugs did not
+appear until 1962.
+</code></pre>
+
+<p>Understanding how to use loop invariants in composing a program is very important,
+so let&rsquo;s first implement a binary search and prove the correctness utilizing this.
+Here we use a simplified specification compared to the bsearch function in the C
+standard library.</p>
+
+<p>.. code-block:: cpp</p>
+
+<pre><code>int binsearch(int x, int* A, int n)
+// @require 0 &lt;= n &amp;&amp; n &lt;= length(A)
+// @require is_sorted(A, n)
+/* @ensures (-1 == result &amp;&amp; !is_in(x, A, n))
+            || ((0 &lt;= result &amp;&amp; result &lt; n) &amp;&amp; A[result] == x)
+*/
+{
+    int lower = 0, higher = n;
+    int mid;
+
+    while (lower &lt; higher)
+    // @loop_invariant 0 &lt;= lower &amp;&amp; lower &lt;= higher &amp;&amp; higher &lt;= n
+    // @loop_invariant (lower == 0 || A[lower - 1] &lt; x)
+    // @loop_invariant (higher == n || A[higher] &gt; x)
+    {
+        mid = lower + (higher - lower) / 2;
+        // @assert lower &lt;= mid &amp;&amp; mid &lt; higher
+        if (A[mid] == x)
+            return mid;
+        else if (A[mid] &lt; x)
+            lower = mid + 1;
+        else
+            higher = mid;
+    }
+    return -1;
+}
+</code></pre>
+
+<p>It&rsquo;s easy to prove that the loop invariants are strong enough to imple the
+postcodition of the function(@ensures). Does this function terminate? In the
+loop body, we have lower &lt; higher, so lower &lt;= mid &amp;&amp; mid &lt; higher, then the
+intervals from <em>lower</em> to <em>mid</em> and from <em>(mid+1)</em> to <em>higher</em> are strictly
+smaller than the original interval (lower, higher), unless we find the element,
+the difference between higher and lower will eventually become 0 and we will
+exit the loop.</p>
+
+<p><strong>The bisect() functions provided in this module are useful for finding the
+insertion points but can be tricky or awkward to use for common searching
+tasks.</strong></p>
+
+<h2>Code comments</h2>
+
+<p>The above binsearch function will return the first of the elements that equals
+to the target if there are more than one. Sometimes it&rsquo;s required to find the
+left most one or the right most one. We can achieve this by using the bisect()
+functions. Let&rsquo;s examine the pre and post conditions, and also loop invariants.</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def bisect_right(a, x, lo=0, hi=None):
+
+    # Let l be the original lo passed in, and h be hi. In order to differentiate.
+
+    # @requires 0 &lt;= l &amp;&amp; l &lt; h &amp;&amp; h &lt;= len(a)
+    # @requires is_sorted(a[l:h])
+    # @ensures all e in a[l:result] have e &lt;= x, and all e in a[result:h] have e &gt; x
+
+    while lo &lt; hi:
+        # @loop_invariant l &lt;= lo &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= h
+        # @loop_invariant lo == l || a[lo - 1] &lt;= x
+        # @loop_invariant hi == h || a[hi] &gt; x
+        mid = (lo + hi) // 2
+        # @assert lower &lt;= mid &amp;&amp; mid &lt; higher
+        if x &lt; a[mid]:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+</code></pre>
+
+<p>After exiting the loop, we have lo == hi. Now we have to distinguish some cases:</p>
+
+<ul>
+<li>If lo == l, from the third conjunct, we know that a[hi] > x, and since lo == hi,
+we have a[lo] > x. In this case, all e in a[l:h] > x</li>
+<li>If hi == h, from the second conjunct, we know that a[lo - 1] &lt; x, in this case,
+all e in a[l:h] &lt;= x</li>
+<li>if lo != l and hi != h, from the second and third conjuncts, we know that
+a[lo - 1] &lt;= x, a[hi] > x. The post condition still holds.</li>
+</ul>
+
+
+<p>We can do the same analysis on the function bisect_left().</p>
+
+<p>Note: In the pre condition I explicitly written down that lo &lt; hi is required, the
+code will directly return lo when hi is less than or equal to lo, but that&rsquo;s simply
+meaningless, if this is the case, the sorted order of &lsquo;a&rsquo; after we insert element
+before the index returned by the function.</p>
+
+<p>About the function prototype
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In the doc of the module, it&rsquo;s <strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong>
+while in the source code, it&rsquo;s <strong>def bisect_left(a, x, lo=0, hi=None)</strong></p>
+
+<p><strong>bisect.bisect_right(a, x, lo=0, hi=len(a))</strong> is not valid python code, you will
+get error like this: <strong>NameError: name &lsquo;a&rsquo; is not defined.</strong> This is because default
+values are computed and bound at the function definition time rather than when you
+call the function. This means that you can&rsquo;t have a default which is dependent on
+something that is not known until the function is called.</p>
+
+<h2>Pythonic stuff</h2>
+
+<p>Override function definitions in Python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code># Overwrite above definitions with a fast C implementation
+try:
+    from _bisect import *
+except ImportError:
+    pass
+</code></pre>
+
+<p>Gotcha &ndash; Mutable default arguments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+<p>See <code>here &lt;http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument&gt;</code>_
+for more details.</p>
+]]></content>
+  </entry>
+  
+</feed>

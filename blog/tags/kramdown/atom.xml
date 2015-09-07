@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: kramdown | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/kramdown/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/"/>
+    <updated>2012-08-18T00:57:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress</id>
+    <content type="html"><![CDATA[<p>It took me some time to finally get latex math formulas working in Octopress.
+If you googled &lsquo;Octopress latex&rsquo;, you can get quite a few online resources about
+how to support latex in octopress, with various levels of complexity. In this
+post, I will write down how I achieve this.</p>
+
+<h2>The initial attempt</h2>
+
+<p>As I installed the <a href="https://github.com/xdissent/jekyll-rst">jekyll-rst</a> plugin
+to use rst to write my posts, I thought it should be easy to write latex math
+because docutils has native support for it since version 0.8 (A :math: role and
+also a .. math: directive introduced for that). However, after I tried to use
+these in a octopress post, I found that the post will be rendered to empty. For
+example, if I insert the following rst code into my post, the whole post becomes
+empty; but after removing this line, everything is fine.</p>
+
+<pre><code>The area of a circle is :math:`A_\text{c} = (\pi/4) d^2`.
+</code></pre>
+
+<p>I also verified that the exact same code can be successfully converted to valid
+html using the &lsquo;rst2html.py&rsquo; script on my system, so I guess maybe something is
+wrong in &lsquo;RbST&rsquo;. I found that in RbST, it has its own copies of rst2html and
+rst2latex tools under <strong> /gems/RbST-0.1.3/lib/rst2parts </strong>,</p>
+
+<pre><code class="console">chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$ ls
+__init__.py  rst2html.py  rst2latex.py  transform.py  transform.pyc
+chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$ ls ..
+rbst.rb  rst2parts
+</code></pre>
+
+<p>which will be used in rbst.rb. I have even tried to change rbst.rb to use the
+rst2html.py installed on my system, but this also didn&rsquo;t get any luck.</p>
+
+<pre><code class="ruby">class RbST
+
+  @@executable_path = File.expand_path(File.join(File.dirname(__FILE__), "rst2parts"))
+  @@executables = {
+    # :html  =&gt; File.join(@@executable_path, "rst2html.py"),
+    :html  =&gt; "/usr/local/bin/rst2html.py",
+    :latex =&gt; File.join(@@executable_path, "rst2latex.py")
+  }
+...
+</code></pre>
+
+<p>Finally, I gave up on this and opened an
+<a href="https://github.com/xdissent/jekyll-rst/issues/6">issue</a> on this for the jekyll-rst
+plugin. Hope the author can fix this.</p>
+
+<h2>Switch back to markdown and using kramdown</h2>
+
+<p>After a google search about this issue, seems that the simplest solution is to use
+kramdown, which has built-in support for latex.</p>
+
+<p>First, install kramdown:
+<code>gem install karmdown</code></p>
+
+<p>Then, add mathjax configs into <head></head> tag, in octopress, just add the
+below code into <code>/source/_includes/custom/head.html</code>:</p>
+
+<p>``` html</p>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+
+
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<pre><code>
+See [here](http://kramdown.rubyforge.org/syntax.html#math-blocks) for more details.
+After this, we are ready to test latex math in our post. For example:
+</code></pre>
+
+<p>$$
+\begin{align<em>}
+  &amp; \phi(x,y) = \phi \left(\sum<em>{i=1}^n x_ie_i, \sum</em>{j=1}^n y_je_j \right)
+  = \sum<em>{i=1}^n \sum</em>{j=1}^n x_i y_j \phi(e_i, e_j) = \
+  &amp; (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) &amp; \cdots &amp; \phi(e_1, e_n) \
+      \vdots &amp; \ddots &amp; \vdots \
+      \phi(e_n, e_1) &amp; \cdots &amp; \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \
+      \vdots \
+      y_n
+    \end{array} \right)
+\end{align</em>}
+$$
+```</p>
+
+<p>will render as</p>
+
+<p>$$
+\begin{align<em>}
+  &amp; \phi(x,y) = \phi \left(\sum<em>{i=1}^n x_ie_i, \sum</em>{j=1}^n y_je_j \right)
+  = \sum<em>{i=1}^n \sum</em>{j=1}^n x_i y_j \phi(e_i, e_j) = \
+  &amp; (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) &amp; \cdots &amp; \phi(e_1, e_n) \
+      \vdots &amp; \ddots &amp; \vdots \
+      \phi(e_n, e_1) &amp; \cdots &amp; \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \
+      \vdots \
+      y_n
+    \end{array} \right)
+\end{align</em>}
+$$</p>
+
+<p>And for inline latex code, just use <code>$\exp(-\frac{x^2}{2})$</code>, which will give
+$\exp(-\frac{x<sup>2</sup>}{2})$.</p>
+]]></content>
+  </entry>
+  
+</feed>

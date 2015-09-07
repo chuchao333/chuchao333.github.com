@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: abc | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/tags/abc/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python abc]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/21/python-abc/"/>
+    <updated>2012-08-21T21:06:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/21/python-abc</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>This module provides the infrastructure for defining
+<code>abstract base classes &lt;http://docs.python.org/glossary.html#term-abstract-base-class&gt;</code><em>
+(ABCs) in Python. The ABCs define a minimal set of methods that establish the
+characteristic behavior of the type. For more details about this, see
+<code>PEP 3119 &lt;http://www.python.org/dev/peps/pep-3119/&gt;</code></em>.</p>
+
+<h2>Highlights</h2>
+
+<p>The module provides a <code>metaclass &lt;http://docs.python.org/glossary.html#term-metaclass&gt;</code>_
+used to create ABCs. An ABC can be subclassed directly. The class also has a &lsquo;register&rsquo;
+method to register unrelated concrete classes (including built-in classes) and unrelated
+ABCs as &lsquo;virtual subclasses&rsquo;</p>
+
+<p>Also there are two decorators <em>abstractmethod</em> and <em>abstractproperty</em>, which will set
+the function object&rsquo;s attribute &lsquo;<strong>isabstractmethod</strong>&rsquo; to True. Only when all of the
+abstract methods and abstract properties are overriden, can a class that has a metaclass
+derived from ABCMeta be instantiated.</p>
+
+<h2>Code comments</h2>
+
+<p>ABCMeta.<strong>new</strong>
+~~~~~~~~~~~~~~~
+.. code-block:: python</p>
+
+<pre><code>def __new__(mcls, name, bases, namespace):
+    cls = super(ABCMeta, mcls).__new__(mcls, name, bases, namespace)
+    # Compute set of abstract method names
+    abstracts = set(name
+                 for name, value in namespace.items()
+                 if getattr(value, "__isabstractmethod__", False))
+    for base in bases:
+        for name in getattr(base, "__abstractmethods__", set()):
+            value = getattr(cls, name, None)
+            if getattr(value, "__isabstractmethod__", False):
+                abstracts.add(name)
+    cls.__abstractmethods__ = frozenset(abstracts)
+
+    # chaoc: caches are the typical usages of weak references
+
+    # Set up inheritance registry
+    cls._abc_registry = WeakSet()
+    cls._abc_cache = WeakSet()
+    cls._abc_negative_cache = WeakSet()
+    cls._abc_negative_cache_version = ABCMeta._abc_invalidation_counter
+    return cls
+</code></pre>
+
+<ul>
+<li>It first creates a &lsquo;type&rsquo; object cls. (super(ABCMeta, mcls) is &lsquo;type&rsquo;)</li>
+<li>Iterate through all the attributes (including all the attributes inherited
+from all the bases), if any of them have &lsquo;<strong>isabstractmethod</strong>&rsquo; set to true,
+add it to cls&rsquo;s <strong>abstractmethods</strong>.</li>
+<li>Initialize the attributes &lsquo;<em>abc_registry&rsquo;, &lsquo;</em>abc_cache&rsquo;, &lsquo;<em>abc_negative_cache&rsquo;
+and &lsquo;</em>abc_negative_cache_version&rsquo;, which are used to speed up the check in
+<strong>instancecheck</strong> and <strong>subclasscheck</strong>.</li>
+</ul>
+
+
+<p>ABCMeta.register(cls, subclass)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def register(cls, subclass):
+    """Register a virtual subclass of an ABC."""
+    # chaoc: sanity check to make sure that subclass is class type
+    # either a type object (for new style classes) or the type is
+    # the same as ClassType(for old style classes)
+    if not isinstance(subclass, (type, types.ClassType)):
+        raise TypeError("Can only register classes")
+    if issubclass(subclass, cls):
+        return  # Already a subclass
+    # Subtle: test for cycles *after* testing for "already a subclass";
+    # this means we allow X.register(X) and interpret it as a no-op.
+    if issubclass(cls, subclass):
+        # This would create a cycle, which is bad for the algorithm below
+        raise RuntimeError("Refusing to create an inheritance cycle")
+    cls._abc_registry.add(subclass)
+    ABCMeta._abc_invalidation_counter += 1  # Invalidate negative cache
+</code></pre>
+
+<p>ABCMeta.<strong>instancecheck</strong>
+~~~~~~~~~~~~~~~~~~~~~~~~~
+See the added comments in line</p>
+
+<p>.. code-block:: python</p>
+
+<pre><code>def __instancecheck__(cls, instance):
+    """Override for isinstance(instance, cls)."""
+    # Inline the cache checking when it's simple.
+    subclass = getattr(instance, '__class__', None)
+    if subclass is not None and subclass in cls._abc_cache:
+        return True
+    subtype = type(instance)
+    # Old-style instances
+    if subtype is _InstanceType:
+        subtype = subclass
+    # chaoc: subtype will also be subclass for old style classes
+    # as assigned in the above step
+    if subtype is subclass or subclass is None:
+        # chaoc: check if the negative cache is safe to use or not
+        if (cls._abc_negative_cache_version ==
+            ABCMeta._abc_invalidation_counter and
+            subtype in cls._abc_negative_cache):
+            return False
+        # Fall back to the subclass check.
+        return cls.__subclasscheck__(subtype)
+    return (cls.__subclasscheck__(subclass) or
+            cls.__subclasscheck__(subtype))
+</code></pre>
+
+<p>ABCMeta.<strong>subclasscheck</strong>
+~~~~~~~~~~~~~~~~~~~~~~~~~
+The code and comment in this function is very clear and straightforward.</p>
+
+<p>Just make sure the different cases needed to check:</p>
+
+<ol>
+<li>check the subclass hook</li>
+<li>check if it&rsquo;s a direct subclass through <strong>mro</strong></li>
+<li>check if it&rsquo;s a subclass of a registered class (issubclass is called to do
+recursive check)</li>
+<li>check if it&rsquo;s a subclass of a subclass (issubclass is called to do recursive
+check)</li>
+</ol>
+
+
+<p>In this post, we only talk about the defitions of ABCMeta. We will see the
+typical usages in the <strong>collections</strong> module.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Coursera online functional programming course - a retrospective - Chao's Random Thoughts</title>
+  <meta name="author" content="Chao Chu">
+
+  
+  <meta name="description" content="A review of the Coursera course 'Functional Programming Principles in Scala'">
+  <meta name="keywords" content="Coursera, Scala, FP, SICP">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Chao's Random Thoughts" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chao's Random Thoughts</a></h1>
+  
+    <h2>Keep looking, don't settle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:chuchao333.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/notes">Notes</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Coursera Online Functional Programming Course - a Retrospective</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T15:52:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here comes the summary of the Coursera course
+<a class="reference external" href="https://class.coursera.org/progfun-2012-001/class/index">Fucntional Programming Principles in Scala</a>
+It's a little bit late, it has been two months since I finished the course.
+This is the first Coursera course I followed from the very beginning to the end
+and accomplished all the programming assignments with full scores, which helped
+me to get the certificate with distinction.</p>
+<img alt="/images/posts/coursera_scala_certificate.jpg" src="/images/posts/coursera_scala_certificate.jpg" />
+<p>First the excellent parts of the course:</p>
+<ul class="simple">
+<li>Martin Odersky is a pretty good teacher, and all the lectures are well
+designed. I enjoyed watching the lectures a lot and most of which I have
+read more than once.</li>
+<li>The programming assignments are well structured, with detailed instructions
+and step by step guide. In each of the assignments, the whole task is split
+into several steps with approprivate level of abstractions.</li>
+<li>There are also many useful supporting materials like scala style guide, sbt
+tutorial, instructions on tools setup for the course, which made it easier
+to concentrate on the course content. For me, I don't have scala develop
+environment setup before the course, and by following the tools setup section
+in only took me less than half an hour to get everything ready for trying the
+example code and the assignments.</li>
+</ul>
+<p>As for the less-good things, I would say:</p>
+<ul class="simple">
+<li>Both the lectures and the assignments are quite easy for an experienced
+programmers (No functional programming background needed), I was expecting
+more challenging stuff.</li>
+<li>There are no official solutions distributed. (The course will be offered
+again some time later) However, I still think for those students who passed
+the course should be qualified to get the solutions so that they can compare
+those with their own to see where they can still improve.</li>
+<li>It's a pity that this is only the first half of an advanced undergraduate
+course that Martin taught on campus. I am interested in the other half.</li>
+</ul>
+<p>After taking this cousre, I got a deeper understanding of the functional
+programming basics and it made me feel more comfortable while picking up
+SICP again (after 3 years). Now, I am convinced that I am able to go through
+SICP and finish most of the exercises. Also, I had a firmer grasp of Scala
+even though I didn't write more than 100 lines of Scala before; I understand
+more about the scala syntax, idioms and even the motivations behind some of the
+language structures. E.g., call by name/value, lazy evaluation, currying,
+pattern matching and so on. I will publish my detailed notes on the lectures
+and assignments to this blog later.</p>
+<p>To conclude, I really enjoyed taking the course and many thanks to Martin
+, the TAs, and also the coursera staff for offering such a wonderful course.</p></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T15:52:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coursera/'>coursera</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/21/python-abc/" title="Previous Post: Python abc">&laquo; Python abc</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/14/sicp-section-1-1/" title="Next Post: SICP Section 1.1">SICP Section 1.1 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coursera/'>coursera (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (4)</a></li>
+<li class='category'><a href='/blog/categories/scala/'>scala (1)</a></li>
+<li class='category'><a href='/blog/categories/sicp/'>sicp (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/07/scala-cake-pattern/">Scala Cake Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/14/sicp-section-1-2/">SICP Section 1.2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/sicp-section-1-1/">SICP Section 1.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/coursera-online-functional-programming-course-review/">Coursera online functional programming course - a retrospective</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Recent Comments</h1>
+        <div id="dsq-recentcomments" class="dsq-widget">
+            <script type="text/javascript" src="http://disqus.com/forums/chaoc/recent_comments_widget.js?hide_avatars=1">
+            </script>
+        </div>
+</section>
+
+<section>
+    <h2>Reading List</h2>
+    <div>
+        <script type="text/javascript" src="http://www.douban.com/service/badge/3607474/?show=dolist&amp;n=6&amp;columns=3&amp;hidelogo=yes&amp;cat=book" >
+        </script>
+    </div>
+</section>
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+    <a style="font-size: 185%" href="/blog/tags/chapter-1/">Chapter 1</a>
+<a style="font-size: 210%" href="/blog/tags/sicp/">SICP</a>
+<a style="font-size: 150%" href="/blog/tags/scala/">Scala</a>
+<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/github/">github</a>
+<a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
+<a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
+<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Chao Chu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2013/01/06/coursera-online-functional-programming-course-review/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

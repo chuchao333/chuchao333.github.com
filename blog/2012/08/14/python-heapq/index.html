@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Python heapq - Chao's Random Thoughts</title>
+  <meta name="author" content="Chao Chu">
+
+  
+  <meta name="description" content="Notes on reading the source of heapq">
+  <meta name="keywords" content="python, heapq, priority queue">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chuchao333.github.com/blog/2012/08/14/python-heapq/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Chao's Random Thoughts" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chao's Random Thoughts</a></h1>
+  
+    <h2>Keep looking, don't settle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:chuchao333.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/notes">Notes</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python Heapq</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T22:26:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>The module provides an implementation of heap queue algorithm, also known as
+priority queue algorithm.</p>
+</div>
+<div class="section" id="highlights">
+<h2>Highlights</h2>
+<ul class="simple">
+<li>Zero-based indexing is used, so the children's index of node with index k
+are (2*k + 1) and (2*k + 2) respectively.</li>
+<li>Internally a 'min heap' is maintained rather than 'max heap', which is more
+generally used in algorithm textbooks.</li>
+<li>Three general functions based on heaps are also provided:</li>
+</ul>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c"># Merge multiple sorted inputs into a single sorted output</span>
+</span><span class="line"><span class="c"># (for example, merge timestamped entries from multiple log files)</span>
+</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c"># The following two functions are effectively like</span>
+</span><span class="line"><span class="c"># sorted(iterable, key=key, reverse=True)[:n] and</span>
+</span><span class="line"><span class="c"># sorted(iterable, key=key)[:n],</span>
+</span><span class="line"><span class="c"># but they perform best with smaller values of n</span>
+</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">[,</span> <span class="n">key</span><span class="p">])</span>
+</span><span class="line"><span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">[,</span> <span class="n">key</span><span class="p">]))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="pythonic-stuff">
+<h2>Pythonic stuff</h2>
+<div class="section" id="rich-comparison-methods">
+<h3>Rich comparison methods</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">cmp_lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span><span class="line">    <span class="c"># use __lt__ if available; otherwise, try __le__</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&#39;__lt__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="ow">not</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure><p>In python, there are 6 so called &quot;Rich Comparison&quot; methods, x &lt; y calls
+x.__lt__(y) and others are similar (__le__ and &lt;=; __gt__ and &gt;=; __eq__ and ==;
+__ne__ and &lt;&gt;). Arguments to rich comparison  methods are never coerced. see
+<a class="reference external" href="http://docs.python.org/glossary.html#term-coercion">coercion</a></p>
+</div>
+</div>
+<div class="section" id="code-comments">
+<h2>Code comments</h2>
+<div class="section" id="why-heapify-x-is-o-n">
+<h3>Why heapify(x) is O(n)?</h3>
+<p>This is not obvious at first by seeing the code, given that there is a 'while'
+loop in _siftup and also a while loop in _siftdown(called in _siftup). Let's
+look into it further:</p>
+<ol class="arabic simple">
+<li>in the while loop of _siftup, it takes O(L) time for nodes that L levels
+above leaves.</li>
+<li>and in the while loop of _siftdown called in _siftup, it takes at most L
+steps, so _siftdown is O(L).</li>
+<li>since we have n/4 nodes in level 1, n/8 nodes in level 2, and finally one
+root node, which is lg(n) levels above leaf, so the total amount in the while
+loop of heapify is:</li>
+</ol>
+<div class="line-block">
+<div class="line"><strong>n/4 * c + n/8 * c + n/16 * 3c + ... + 1 * lg(n) * c</strong>, and let n/4 = 2^k,
+after simplification, we get:</div>
+<div class="line"><strong>c * 2^k(1/2^0 + 2/2^1 + 3/2^2 + ... + (k+1)/2^k)</strong>, as the limit of
+<strong>(k+1)/2^k</strong> is 0 when k is infinite, so the term in the brackets bound to
+a constant, from this we can conclude that heapify is O(2^k), which is O(n).</div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="why-it-continues-to-find-the-smaller-child-until-a-leaf-is-hit-in-siftup">
+<h3>Why it continues to find the smaller child until a leaf is hit in _siftup?</h3>
+<p>As explained in the comment by the module author, this is a ad hoc to reduce
+the comparisons on the following operations on the heap.</p>
+</div>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chao Chu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T22:26:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/14/intro-on-reading-source-of-python-standard-libraries/" title="Previous Post: Introduction on reading source of python standard libraries series">&laquo; Introduction on reading source of python standard libraries series</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/18/supporting-latex-in-octopress/" title="Next Post: Support LaTex in Octopress">Support LaTex in Octopress &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coursera/'>coursera (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (4)</a></li>
+<li class='category'><a href='/blog/categories/scala/'>scala (1)</a></li>
+<li class='category'><a href='/blog/categories/sicp/'>sicp (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/07/scala-cake-pattern/">Scala Cake Pattern</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/sicp-section-1-3/">SICP Section 1.3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/14/sicp-section-1-2/">SICP Section 1.2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/14/sicp-section-1-1/">SICP Section 1.1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/coursera-online-functional-programming-course-review/">Coursera online functional programming course - a retrospective</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Recent Comments</h1>
+        <div id="dsq-recentcomments" class="dsq-widget">
+            <script type="text/javascript" src="http://disqus.com/forums/chaoc/recent_comments_widget.js?hide_avatars=1">
+            </script>
+        </div>
+</section>
+
+<section>
+    <h2>Reading List</h2>
+    <div>
+        <script type="text/javascript" src="http://www.douban.com/service/badge/3607474/?show=dolist&amp;n=6&amp;columns=3&amp;hidelogo=yes&amp;cat=book" >
+        </script>
+    </div>
+</section>
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+    <a style="font-size: 185%" href="/blog/tags/chapter-1/">Chapter 1</a>
+<a style="font-size: 210%" href="/blog/tags/sicp/">SICP</a>
+<a style="font-size: 150%" href="/blog/tags/scala/">Scala</a>
+<a style="font-size: 90%" href="/blog/tags/blog/">blog</a>
+<a style="font-size: 90%" href="/blog/tags/github/">github</a>
+<a style="font-size: 90%" href="/blog/tags/heap/">heap</a>
+<a style="font-size: 90%" href="/blog/tags/latex/">latex</a>
+<a style="font-size: 185%" href="/blog/tags/octopress/">octopress</a>
+<a style="font-size: 90%" href="/blog/tags/priority-queue/">priority queue</a>
+<a style="font-size: 210%" href="/blog/tags/python/">python</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Chao Chu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chuchao333.github.com/blog/2012/08/14/python-heapq/';
+        var disqus_url = 'http://chuchao333.github.com/blog/2012/08/14/python-heapq/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

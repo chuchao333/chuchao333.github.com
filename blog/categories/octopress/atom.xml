@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: octopress | Chao's Random Thoughts]]></title>
+  <link href="http://chuchao333.github.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://chuchao333.github.com/"/>
+  <updated>2015-09-07T19:35:50+08:00</updated>
+  <id>http://chuchao333.github.com/</id>
+  <author>
+    <name><![CDATA[Chao Chu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Support LaTex in Octopress]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress/"/>
+    <updated>2012-08-18T00:57:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/08/18/supporting-latex-in-octopress</id>
+    <content type="html"><![CDATA[<p>It took me some time to finally get latex math formulas working in Octopress.
+If you googled &lsquo;Octopress latex&rsquo;, you can get quite a few online resources about
+how to support latex in octopress, with various levels of complexity. In this
+post, I will write down how I achieve this.</p>
+
+<h2>The initial attempt</h2>
+
+<p>As I installed the <a href="https://github.com/xdissent/jekyll-rst">jekyll-rst</a> plugin
+to use rst to write my posts, I thought it should be easy to write latex math
+because docutils has native support for it since version 0.8 (A :math: role and
+also a .. math: directive introduced for that). However, after I tried to use
+these in a octopress post, I found that the post will be rendered to empty. For
+example, if I insert the following rst code into my post, the whole post becomes
+empty; but after removing this line, everything is fine.</p>
+
+<pre><code>The area of a circle is :math:`A_\text{c} = (\pi/4) d^2`.
+</code></pre>
+
+<p>I also verified that the exact same code can be successfully converted to valid
+html using the &lsquo;rst2html.py&rsquo; script on my system, so I guess maybe something is
+wrong in &lsquo;RbST&rsquo;. I found that in RbST, it has its own copies of rst2html and
+rst2latex tools under <strong> /gems/RbST-0.1.3/lib/rst2parts </strong>,</p>
+
+<pre><code class="console">chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$ ls
+__init__.py  rst2html.py  rst2latex.py  transform.py  transform.pyc
+chuchao@chuchao:~/.rvm/gems/ruby-1.9.2-p320/gems/RbST-0.1.3/lib/rst2parts$ ls ..
+rbst.rb  rst2parts
+</code></pre>
+
+<p>which will be used in rbst.rb. I have even tried to change rbst.rb to use the
+rst2html.py installed on my system, but this also didn&rsquo;t get any luck.</p>
+
+<pre><code class="ruby">class RbST
+
+  @@executable_path = File.expand_path(File.join(File.dirname(__FILE__), "rst2parts"))
+  @@executables = {
+    # :html  =&gt; File.join(@@executable_path, "rst2html.py"),
+    :html  =&gt; "/usr/local/bin/rst2html.py",
+    :latex =&gt; File.join(@@executable_path, "rst2latex.py")
+  }
+...
+</code></pre>
+
+<p>Finally, I gave up on this and opened an
+<a href="https://github.com/xdissent/jekyll-rst/issues/6">issue</a> on this for the jekyll-rst
+plugin. Hope the author can fix this.</p>
+
+<h2>Switch back to markdown and using kramdown</h2>
+
+<p>After a google search about this issue, seems that the simplest solution is to use
+kramdown, which has built-in support for latex.</p>
+
+<p>First, install kramdown:
+<code>gem install karmdown</code></p>
+
+<p>Then, add mathjax configs into <head></head> tag, in octopress, just add the
+below code into <code>/source/_includes/custom/head.html</code>:</p>
+
+<p>``` html</p>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+
+
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<pre><code>
+See [here](http://kramdown.rubyforge.org/syntax.html#math-blocks) for more details.
+After this, we are ready to test latex math in our post. For example:
+</code></pre>
+
+<p>$$
+\begin{align<em>}
+  &amp; \phi(x,y) = \phi \left(\sum<em>{i=1}^n x_ie_i, \sum</em>{j=1}^n y_je_j \right)
+  = \sum<em>{i=1}^n \sum</em>{j=1}^n x_i y_j \phi(e_i, e_j) = \
+  &amp; (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) &amp; \cdots &amp; \phi(e_1, e_n) \
+      \vdots &amp; \ddots &amp; \vdots \
+      \phi(e_n, e_1) &amp; \cdots &amp; \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \
+      \vdots \
+      y_n
+    \end{array} \right)
+\end{align</em>}
+$$
+```</p>
+
+<p>will render as</p>
+
+<p>$$
+\begin{align<em>}
+  &amp; \phi(x,y) = \phi \left(\sum<em>{i=1}^n x_ie_i, \sum</em>{j=1}^n y_je_j \right)
+  = \sum<em>{i=1}^n \sum</em>{j=1}^n x_i y_j \phi(e_i, e_j) = \
+  &amp; (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) &amp; \cdots &amp; \phi(e_1, e_n) \
+      \vdots &amp; \ddots &amp; \vdots \
+      \phi(e_n, e_1) &amp; \cdots &amp; \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \
+      \vdots \
+      y_n
+    \end{array} \right)
+\end{align</em>}
+$$</p>
+
+<p>And for inline latex code, just use <code>$\exp(-\frac{x^2}{2})$</code>, which will give
+$\exp(-\frac{x<sup>2</sup>}{2})$.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress and Github]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/octopress-and-github/"/>
+    <updated>2012-07-25T23:21:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/octopress-and-github</id>
+    <content type="html"><![CDATA[<p>This post documents how I set up this blog and the problems encounted. Octopress
+is quite popular recently and you can just find a huge number of bloggers who
+have written about how to set this up online. My main references are
+<code>Setting up a blog on Octopress and github &lt;http://www.gerardcondon.com/blog/2012/03/04/setting-up-octopress-and-github/&gt;</code><em>
+and <code>Blog = Github + Octopress &lt;http://mrzhang.me/blog/blog-equals-github-plus-octopress.html&gt;</code></em> (In Chinese).</p>
+
+<p>.. more</p>
+
+<h2>Ruby setup</h2>
+
+<p>Since I am new to ruby, I just follow others' instructions to install ruby by rvm.
+My first attempt was:</p>
+
+<p>.. code-block:: console</p>
+
+<p>   $ sudo apt-get install ruby-rvm</p>
+
+<p>This turned out to cause some troubles in the following steps to install ruby 1.9.2.
+I don&rsquo;t know the exact reason because I am not familiar with ruby. This <code>link &lt;http://octopress.org/docs/setup/rvm/&gt;</code><em>
+contains detailed information to install rvm. Once it&rsquo;s installed, installing octopress
+following <code>the offical guide &lt;http://octopress.org/docs/setup/&gt;</code></em> should be straightforward.</p>
+
+<h2>Host on Github</h2>
+
+<p>This is very simple in Octopress.
+I mainly followed <code>this &lt;http://code.dblock.org/octopress-setting-up-a-blog-and-contributing-to-an-existing-one&gt;</code>_, one
+thing worth mentioning here is during the step to enter the url of your repository after typing</p>
+
+<p>.. code-block:: console</p>
+
+<p>   $ rake setup_github_pages</p>
+
+<p>Here, the repo must use the username/username.github.com naming scheme,
+see <code>here &lt;https://help.github.com/articles/user-organization-and-project-pages&gt;</code>_</p>
+
+<h2>Writing posts with reStructuredText</h2>
+
+<p>As you may already know, I am a python fan. So I prefer rst to markdown.
+<code>jekyll-rst &lt;https://github.com/xdissent/jekyll-rst&gt;</code><em>
+is the plugin to add rst support to Octopress. After enabling the plugin, I changed
+default post ext in </em>confg.yml to rst. Code block in rst is quite handy to type.</p>
+
+<p>.. code-block:: python</p>
+
+<p>   def test():
+       &ldquo;&rdquo;&ldquo;Testing octopress&rdquo;&ldquo;&rdquo;</p>
+
+<pre><code>   print "this is so cool"
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello Octopress]]></title>
+    <link href="http://chuchao333.github.com/blog/2012/07/25/hello-octopress/"/>
+    <updated>2012-07-25T02:31:00+08:00</updated>
+    <id>http://chuchao333.github.com/blog/2012/07/25/hello-octopress</id>
+    <content type="html"><![CDATA[<p>This is the first post, using Octopress to set up a tech blog on github is
+so cool!</p>
+
+<h2>TO DO:</h2>
+
+<hr />
+
+<ul>
+<li>Add a &lsquo;about&rsquo; page serving as the self introduction</li>
+<li>Enable visitors to post comments</li>
+<li>Add useful plugins</li>
+<li>Prepare the post to summarise the process of setting all this things up</li>
+</ul>
+
+
+<h2>Update on 2012-07-27:</h2>
+
+<hr />
+
+<p>So far, I have finished the basic settings of this blog. The changes include:</p>
+
+<ul>
+<li>Change the default layout and fonts to my preference</li>
+<li>Add jekyll-rst plugin, to use rst rather then markdown by default</li>
+<li>Enable comment</li>
+<li>Add custom asides: category_list, recent_comment, douban and tag cloud</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
